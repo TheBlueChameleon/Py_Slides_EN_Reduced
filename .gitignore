@@ -1,0 +1,19 @@
+# patterns to exclude
+*.aux
+*.log
+*.lof
+*.lot
+*.out
+*.pdf
+*.synctex.gz
+*.toc
+*.snm
+*.nav
+*.vrb
+
+# files to ignore
+.directory
+
+# directories to exclude
+_minted*/
+
