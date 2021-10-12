@@ -1,0 +1,679 @@
+% =========================================================================== %
+
+\begin{frame}[t,plain]
+\titlepage
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}{Recap}
+%
+\vspace{6pt}
+\begin{columns}
+\column{.5\linewidth}
+Command Line Interface
+\begin{itemize}
+\item Text Commands to Start Programs
+\item Concept Current Working Directoy (CWD)
+\item Command Line Parameters
+\item File Name Extension
+\end{itemize}
+%
+\column{.5\linewidth}
+Python Interpreter
+\begin{itemize}
+\item Invocation from Command Line
+\item Live mode: Python Commands directly into console
+\item Script mode: Script files as command line parameters
+\end{itemize}
+\end{columns}
+
+\vspace{12pt}
+\begin{columns}[t]
+\column{.5\linewidth}
+Command \inPy{print}
+\begin{itemize}
+\item Output of Text on Screen
+\item Parenthesis, quotation marks
+\end{itemize}
+%
+\column{.5\linewidth}
+Variables
+\begin{itemize}
+\item Symbols for (changing) values
+\item Data Types
+\item Operators
+\end{itemize}
+\end{columns}
+%
+\begin{center}
+\emph{Any Questions?}
+\end{center}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]{Converting Data Types}
+%
+\begin{itemize}
+\item Variables store values
+\item We want to do computations with these values
+\item Data types affect the computation (\inPy{"1" + "2"} vs. \inPy{1 + 2})
+\item Data types can be incompatible (\inPy{"1" + 2} causes an error message)
+\item Data types can be used as functions: \inPy{float(1)} \thus~ \inPy{1.0}
+\end{itemize}
+
+\vspace{6pt}
+\begin{codebox}[Code: Data Type Conversion, width=.5\linewidth, nobeforeafter, equal height group = grpToString]
+\begin{minted}[linenos, fontsize=\scriptsize]{python}
+text = "The result is: "
+result = ((1 + 1j) * (7.5 / 19 + 1)) ** 2
+
+text += str(result)
+
+print(text)
+\end{minted}
+\end{codebox}
+%
+\begin{cmdbox}[Output: Data Type Conversion, width=.49\linewidth, nobeforeafter, equal height group = grpToString]
+\begin{minted}[fontsize=\scriptsize]{text}
+The result is: 3.890581717451524j
+\end{minted}
+\end{cmdbox}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]{Converting Data Types}
+%
+\begin{itemize}
+\item Loss of information possible
+	\begin{itemize}
+	\item \inPy{int(1.2)} \thus~ \inPy{1}
+	\end{itemize}
+\item Conversion not always possible
+	\begin{itemize}
+	\item \inPy{int("1")} -- okay, result \inPy{1}
+	\item \inPy{float("1.0")} -- okay, result \inPy{1.0}
+	\item  \inPy{int("1.0")} -- Error message
+	\end{itemize}
+\end{itemize}
+%
+\begin{cmdbox}[Error Message -- \texttt{int("1.0")}]
+\begin{minted}[fontsize=\scriptsize]{text}
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+ValueError: invalid literal for int() with base 10: '1.0'
+\end{minted}
+\end{cmdbox}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]{Generating Formatted Strings}
+%
+\begin{itemize}
+\item Output in tabular format
+\item Number of decimals not fixed
+\item Solution: \emph{Format Strings}: specify format in string
+\item Prefix \inPy{f}, thereafter normal string in quotes (\inPy{"} oder \inPy{'})
+\item Expression to be convertet to string in \{curly brackets\}
+\item Optionally: colon (:) and format specifiers
+\end{itemize}
+
+\vspace{6pt}
+\begin{codebox}[Code: Format Strings (1), width=.5\linewidth, nobeforeafter, equal height group = grpFormatString1]
+\begin{minted}[linenos, fontsize=\scriptsize]{python}
+x = 7 / 3
+text = f"x = {x}"
+
+print(text)
+\end{minted}
+\end{codebox}
+%
+\begin{cmdbox}[Output: Format Strings (1), width=.49\linewidth, nobeforeafter, equal height group = grpFormatString1]
+\begin{minted}[fontsize=\scriptsize]{text}
+x = 2.3333333333333335
+\end{minted}
+\end{cmdbox}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]{Generating Formatted Strings: Column Width}
+%
+\begin{itemize}
+\item Format specifiers: can be a single number
+\item Specifies the number of characters to be used for representing the expression
+\item Unused characters will be padded with whitespaces
+\item Excess characters: format specifier is ignored
+\item \emph{No} whitespaces
+\end{itemize}
+
+%\vspace{6pt}
+\begin{codebox}[Code: Format Strings (2), width=.49\linewidth, nobeforeafter, equal height group = grpFormatString2]
+\begin{minted}[linenos, fontsize=\scriptsize]{python}
+name1 = "Dusky"
+score1 = 9001
+name2 = "Joe"
+score2 = 666
+print("Highscore")
+print(f"{'Python':20}: {123456:5}")
+print(f"{name1:20}: {score1:5}")
+print(f"{name2:20}: {score2:5}")
+\end{minted}
+\end{codebox}
+%
+\begin{cmdbox}[Output: Format Strings (2), width=.49\linewidth, nobeforeafter, equal height group = grpFormatString2]
+\begin{minted}[fontsize=\scriptsize]{text}
+Highscore
+Python              : 123456
+Dusky               :  9001
+Joe                 :   666
+\end{minted}
+\end{cmdbox}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]{Format Strings: Alignment and Clipping}
+%
+\begin{itemize}
+\item \texttt{<}, \texttt{>}, \inPy{^}: Alignment left, right, centered
+\item \texttt{.number}: Limit output to \texttt{number} characters (truncate)
+\item whitespace or plus: reserve space for a sign
+\item \texttt{0}: show leading zeros
+\end{itemize}
+
+\vspace{6pt}
+\begin{codebox}[Code: Format Strings (3), width=.49\linewidth, nobeforeafter, equal height group = grpFormatString3]
+\begin{minted}[linenos, fontsize=\scriptsize]{python}
+text = "sample"
+value = 123
+print( f"|{text:15}| |{value:15}|" )
+print(f"|{text:<15}| |{value:<15}|")
+print(f"|{text:>15}| |{value:>15}|")
+print(f"|{text:^15}| |{value:^15}|")
+\end{minted}
+\end{codebox}
+%
+\begin{cmdbox}[Output: Format Strings (3), width=.49\linewidth, nobeforeafter, equal height group = grpFormatString3]
+\begin{minted}[fontsize=\scriptsize]{text}
+|sample         | |            123|
+|sample         | |123            |
+|         sample| |            123|
+|    sample     | |      123      |
+\end{minted}
+\end{cmdbox}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]{Format Strings: Floating Point Numbers}
+%
+\begin{itemize}
+\item Format Specifier \texttt{f}
+\item \texttt{.number}: limit to \texttt{number} characters (truncate)
+\item \texttt{total.decimal} -- use \texttt{total} characters, of which \texttt{decimal} after the point
+\item Attention: Decimal point is counted as well
+\item Can be combined with other characters
+\end{itemize}
+
+\vspace{6pt}
+\begin{codebox}[Code: Format Strings (4), width=.49\linewidth, nobeforeafter, equal height group = grpFormatString4]
+\begin{minted}[linenos, fontsize=\scriptsize]{python}
+num = 1.2
+print(f"|{num}|")
+print(f"|{num:f}|")
+print(f"|{num:6.2f}|")
+print(f"|{num:<6.1f}|")
+print(f"|{num:06.2f}|")
+print(f"|{num:+06.2f}|")
+print(f"|{num: 06.2f}|")
+\end{minted}
+\end{codebox}
+%
+\begin{cmdbox}[Output: Format Strings (4), width=.49\linewidth, nobeforeafter, equal height group = grpFormatString4]
+\begin{minted}[fontsize=\scriptsize]{text}
+|1.2|
+|1.200000|
+|  1.20|
+|1.2   |
+|001.20|
+|+01.20|
+| 01.20|
+\end{minted}
+\end{cmdbox}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}{The Main Concern}
+%
+\begin{center}
+\begin{Large}
+\emph{Do I have to know all of this by heart?}
+\end{Large}
+\end{center}
+%
+\begin{itemize}
+\item Nope.
+\item You can use the lecture notes, slides, even the internet at any time.
+\item Know that these options do exist
+\item Be able to read this
+\item Be able to use this with the aid of literature
+\item Given enough time you \emph{will} know these by heart
+\item But: even after 20 years of coding I have to look up some details
+\end{itemize}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}{Chapter 2}
+%
+\begin{itemize}
+\item  User Input and Conditions
+	\begin{itemize}
+	\item User input -- \inPy{input}
+	\item Booleans (truth values), comparison operators and logical operators
+	\item \inPy{if}-compounds
+	\item Ternary Operator
+	\end{itemize}
+\end{itemize}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]{User Input}
+%
+\begin{itemize}
+\item Command \inPy{input}: Read data from the keyboard
+\item Optional parameter \enquote{prompt}: Text to be shown pre-input, \zB \enquote{question} to the user
+\item Result is \emph{returned} as a string
+\item[\Thus] Type conversion might be necessary
+\item User can (and will!) enter utter BS
+\end{itemize}
+%
+\begin{codebox}[Code: \texttt{input}, width=.49\linewidth, nobeforeafter, equal height group = grpInput]
+\begin{minted}[linenos, fontsize=\scriptsize]{python}
+inText = input(
+    "Please provide a number: ")
+inNumber = float(inText)
+print("The square of your number is",
+      inNumber ** 2)
+\end{minted}
+\end{codebox}
+%
+\begin{cmdbox}[Output: \texttt{input}, width=.49\linewidth, nobeforeafter, equal height group = grpInput]
+\begin{minted}[fontsize=\scriptsize]{text}
+Please provide a number: 1.5
+The square of your number is 2.25
+\end{minted}
+\end{cmdbox}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]{Truth Values}
+%
+\begin{itemize}
+\item Data type \inPy{bool} (aka \emph{Boolean}, after mathematician George Bool):\\
+	Idea Yes (\inPy{True}) or No (\inPy{False})
+\item Result of comparisons: \inPy{1 + 5 * 8 + 1 == 42} evaluates to \inPy{True}
+\item Can be stored in variables: \inPy{truth = (1 + 5 * 8 + 1 == 42)}
+\item Internally: Numbers \inPy{1} and \inPy{0} with special interpretation\\
+	\inPy{True + True == 2}
+\end{itemize}
+%
+\newcolumntype{C}{>{         \centering\arraybackslash} p{.245\linewidth}}
+\newcolumntype{O}{>{\ttfamily\centering\arraybackslash} p{.200\linewidth}}
+
+\rowcolors{1}{tabhighlight}{white}
+\begin{center}
+\begin{tabularx}
+	{\linewidth}
+	{CO|CO}
+\toprule[1pt]
+	
+	\textbf{Comparison}  & \normalfont \textbf{Symbol}  &  
+	\textbf{Comparison}  & \normalfont \textbf{Symbol}
+\tabcrlf
+
+	Equity        & ==                   &  Inequity         & != \textrm{or} <>\\
+	Less Than     & <                    &  Greater Than     & >  \\
+	Less or Equal & <=                   &  Greater or Equal & >= \\
+	
+\bottomrule[1pt]
+\end{tabularx}
+\end{center}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]{Logical Operators}
+%
+\begin{minipage}[t]{.49\linewidth}
+\begin{itemize}
+\item \enquote{Linking} truth values
+\item \inPy{and}: both expressions satisfied
+\item \inPy{or}: at least one expr. satisfied
+\item Apply on \inPy{bool}s directly (example to the right) ...
+\item ... or in composite expressions:\\
+	\inPy{good = (T > 20) and (T < 25)}
+\item Other languages sometimes implement XOR (exclusive or).\\
+	Python: Use inequity operator with \inPy{bool}s (\texttt{!=})
+\end{itemize}
+\end{minipage}
+%
+\begin{minipage}[t]{.49\linewidth}
+\vspace{-6pt}
+\begin{codebox}[Code: Linking with \texttt{and}]
+\begin{minted}[linenos, fontsize=\scriptsize]{python}
+temperature = float(input(
+    "Current temperature? "
+))
+warmEnough = temperature > 20
+coldEnough = temperature < 25
+pleasantTemperature = warmEnough and \
+                      coldEnough
+print("'It's pleasantly warm' is",
+      pleasantTemperature)
+\end{minted}
+\end{codebox}
+\begin{cmdbox}[Output: Linking with \texttt{and}]
+\begin{minted}[fontsize=\scriptsize]{text}
+Current temperature? 18
+'It's pleasantly warm' is False
+\end{minted}
+\end{cmdbox}
+\end{minipage}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]{Conditional Execution: \inPy{if}-Compounds}
+%
+\begin{minipage}[t]{.49\linewidth}
+\begin{itemize}
+\item If-then-else-structure: execute code only under condition
+\item Condition: truth value
+\item Code: anything we already know (and will learn later).
+	\begin{itemize}
+	\item at least one line
+	\item arbitrarily many lines
+	\item nested \inPy{if}s possible
+	\end{itemize}
+\item Indentation marks what is part of the block
+\item After the \inPy{if}-compound: remove indentation
+\end{itemize}
+\end{minipage}
+%
+\begin{minipage}[t]{.03\linewidth}
+\phantom{x}
+\end{minipage}
+%
+\begin{minipage}[t]{.45\linewidth}
+\vspace{-3pt}
+\begin{codebox}[Syntax: \texttt{if} (1)]
+\begin{minted}[fontsize=\scriptsize]{python}
+if truthValue :
+    statements
+    ...
+\end{minted}
+\end{codebox}
+%
+\begin{codebox}[Syntax: \texttt{if} (2)]
+\begin{minted}[fontsize=\scriptsize]{python}
+if truthValue :
+    statements
+    ...
+else :
+    statements
+    ...
+\end{minted}
+\end{codebox}
+\end{minipage}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}{Indentation}
+%
+\begin{itemize}
+\item Whitespaces \emph{or} tabulators
+\item No mixing (in the same document)
+\item Same number of whitespaces per layer for the entire code
+\end{itemize}
+%
+\begin{hintbox}
+Recommendation by the Python-devs: four whitespaces\\
+Many code editors (like Spyder) automatically interpret Tab as four whitespaces and even recognize block statements!
+\end{hintbox}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]
+%
+\begin{codebox}[Example]
+\begin{minted}[linenos, fontsize=\scriptsize]{python}
+temperature = float(input("Please state the current temperature in Celsius: "))
+
+if (temperature > 20) and (temperature < 25) :
+    print("It's pleasantly warm.")
+else :
+    print("It's either too hot or too cold.")
+
+print("done")
+\end{minted}
+\end{codebox}
+%
+\begin{minipage}[t]{.49\linewidth}
+\begin{cmdbox}[Output 1]
+\begin{minted}[fontsize=\scriptsize]{text}
+Please state the current temperature in
+ Celsius? 23
+It's pleasantly warm
+done
+\end{minted}
+\end{cmdbox}
+\end{minipage}
+%
+\begin{minipage}[t]{.49\linewidth}
+\begin{cmdbox}[Output 2]
+\begin{minted}[fontsize=\scriptsize]{text}
+Please state the current temperature in
+ Celsius? 18
+It's either too hot or too cold
+done
+\end{minted}
+\end{cmdbox}
+\end{minipage}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]{\inPy{if} With Multiple Conditions}
+%
+\begin{minipage}[t]{.49\linewidth}
+\begin{itemize}
+\item First condition is checked first.
+\item If (and only if!) not satisfied: first \inPy{elif}; then second \inPy{elif}, ...
+\item If several conditions satisfied: \emph{only first block} is executed!
+\item There may be arbitrarily many \inPy{elif}-Blocks
+\item \inPy{else} can be used, too, optionally
+\end{itemize}
+\end{minipage}
+%
+\begin{minipage}[t]{.49\linewidth}
+\phantom{xx}
+\begin{codebox}[Syntax: \texttt{if} (3)]
+\begin{minted}[fontsize=\scriptsize]{python}
+if truthValue1 :
+    statements
+    ...
+elif truthValue2 :
+   statements
+   ...
+else :
+    statements
+    ...
+\end{minted}
+\end{codebox}
+\end{minipage}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]
+%
+\begin{codebox}[Example: \texttt{elif}]
+\begin{minted}[linenos, fontsize=\scriptsize]{python}
+temperature = float(input("Please state the current temperature in Celsius: "))
+if temperature < 20 :
+    print("It's too cold.")
+elif temperature > 25 :
+    print("It's too hot")
+else :
+    print("The temperature is pleasant.")
+\end{minted}
+\end{codebox}
+%
+\begin{warnbox}[Erroneous Code: \texttt{elif}, leftupper=6mm]
+\begin{minted}[linenos, fontsize=\scriptsize]{python}
+i = 23
+
+if i < 25 :
+    print("This number is less than 25.")
+elif i > 20 :
+    print("This number is bigger than 20.")
+\end{minted}
+\end{warnbox}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]
+%
+\begin{codebox}[Example: Nested \texttt{if}-Compounds]
+\begin{minted}[linenos, fontsize=\scriptsize]{python}
+i = int(input("Please provide an integer: "))
+
+if i % 2 == 0 :
+    if   i > 100 :
+        print(i, "is a big even number.")
+    elif i >   0 :
+        print(i, "is a smalll even number.")
+    else :
+        print(i, "is a negative even number.")
+else :
+    print(i "is odd.")
+\end{minted}
+\end{codebox}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]
+%
+\begin{warnbox}[Redundancy with \texttt{if} and Logical Operators: \texttt{elif}, leftupper=6mm]
+\begin{minted}[linenos, fontsize=\scriptsize]{python}
+i = int(input("Please provide an integer: "))
+
+if   i % 2 == 0 and i > 100 :
+    print(i, "is a big even number.")
+elif i % 2 == 0 and i <   0 :
+    print(i, "is a smalll even number.")
+elif i % 2 == 0 :
+    print(i, "is a negative even number.")
+else :
+    print(i "is odd.")
+\end{minted}
+\end{warnbox}
+%
+\begin{itemize}
+\item Triple condition: \texttt{i \% 2}
+\item Typos and forgotten lines in editing code later
+\item Diminished legibility: \inPy{else}
+\end{itemize}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]
+%
+\begin{tcbraster}[raster columns=2,
+                  raster equal height,
+                  nobeforeafter,
+                  raster column skip=0.5cm]
+	\begin{warnbox}[Validity Check: Sequence of \texttt{if}s, leftupper=7mm]
+	\begin{minted}[linenos, fontsize=\scriptsize]{python}
+playerCount = int(input(
+    "How many players? "
+))
+      
+if playerCount < 2 :
+    print("Cannot play with", 
+          playerCount, 
+          "players."
+    )
+if playerCount > 5) :
+    print("Cannot play with", 
+          playerCount,
+          "players."
+    )
+	\end{minted}
+	\end{warnbox}
+%
+	\begin{codebox}[Validity Check: Logical \texttt{or}]
+	\begin{minted}[linenos, fontsize=\scriptsize]{python}
+playerCount = int(input(
+    "How many players? "
+))
+      
+if  playerCount < 2 or
+    playerCount > 5  :
+        print("Cannot play with",
+              playerCount,
+              "players."
+        )
+	\end{minted}
+	\end{codebox}
+\end{tcbraster}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}
+%
+\begin{hintbox}[Conclusion]
+\begin{itemize}
+\item Question your Structures.
+\item Avoid Redundancy.
+\item Whenever you would copy and paste: Check if there isn't a better solution.
+\end{itemize}
+
+In bigger projects I write almost each line (that works in the first place) \emph{twice}: Once as a concept and once to keep the code useable in the long run.
+\end{hintbox}
+%
+\end{frame}
