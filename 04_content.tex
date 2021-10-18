@@ -1,0 +1,660 @@
+% =========================================================================== %
+
+\begin{frame}[t,plain]
+\titlepage
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}{Recap}
+%
+\begin{columns}[T]
+\column{.5\linewidth}
+\begin{itemize}
+\item Modules
+	\begin{itemize}
+	\item Load with \inPy{import modulename}
+	\item Use objects with \inPy{modulename.symbol}
+	\end{itemize}
+\item \inPy{list}s
+	\begin{itemize}
+	\item Data containers
+	\item Elements in [brackets, separated by commas]
+	\item Access with [index in brackets]
+	\item Negative indices: count from end, backwards
+	\end{itemize}
+\end{itemize}
+%
+\column{.5\linewidth}
+\begin{itemize}
+\item Slices
+	\begin{itemize}
+	\item \emph{Extended index}
+	\item Creates new (temporary) \inPy{list}
+	\item \hspace{0pt} [start : stop : stride]
+	\item any of these parameters can be omitted
+	\end{itemize}
+\item References and copies
+	\begin{itemize}
+	\item Assignment via \texttt{=} actually assigns references
+	\item Module copy
+	\item \inPy{copy.deepcopy} for sublists
+	\end{itemize}
+\item mutable / immutable objects
+\end{itemize}
+
+\end{columns}
+%
+\begin{center}
+	\emph{Any Questions?}
+\end{center}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]{Chapter 4}
+%
+\begin{itemize}
+\item \inPy{str}ings
+\item \inPy{tuple}s
+\item \inPy{set}s and \inPy{frozenset}s
+\item \inPy{ranges}
+\item \inPy{dict}ionaries
+\item Special functions and operators for data containers
+\end{itemize}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]{Strings}
+%
+\begin{columns}[T]
+\column{.5\linewidth}
+\begin{itemize}
+\item We already know: texts in \texttt{'}single\texttt{'} or \texttt{''}double\texttt{''} quotes
+\item Internally: \emph{immutable list of characters}
+\item Known techniques applicable:
+	\begin{itemize}
+	\item Read access via indices -- pick individual characters
+	\item Slicing -- pick substring
+	\end{itemize}
+\item But: \emph{immutable}
+	\begin{itemize}
+	\item Only string as a whole can be constructed
+	\item Not possible to exchange single characters
+	\end{itemize}
+\end{itemize}
+%
+\column{.5\linewidth}
+\begin{codebox}[Example: Strings]
+\begin{minted}[linenos, fontsize=\scriptsize]{python}
+text = "These go to eleven"
+
+print(text[0])     # 'T'
+print(text[-1])    # 'n'
+print(text[:5])    # 'These'
+
+# text[0] = "t"    -- no write access
+
+text = "It's one louder" 
+# newly constructed string: okay
+\end{minted}
+\end{codebox}
+\end{columns}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]{\inPy{tuple}s}
+%
+\begin{columns}[T]
+\column{.5\linewidth}
+\begin{itemize}
+\item Like \inPy{list}s: Data container
+\item But: \emph{immutable}
+\item Syntax: in (parenthesis)
+\item No \texttt{append}, \texttt{delete}, \texttt{sort}, ...
+\item Addition constructs a new \inPy{tuple}
+\item Often: Return value of functions
+	\begin{itemize}
+	\item Example \inPy{divmod}: quotient and remainder as \inPy{tuple}
+	\item \inPy{divmod(20, 3)} \thus ~ \inPy{(6, 2)}
+	\end{itemize}
+\item Unpacking: \inPy{x, y = (1, 2)}
+\end{itemize}
+%
+\column{.5\linewidth}
+\begin{codebox}[Example: \texttt{tuple}s]
+\begin{minted}[linenos, fontsize=\scriptsize]{python}
+t = (1, 2, 3)
+print(t)        #  (1, 2, 3)
+print(t[0])     #  1
+# t[0] = -1     -- no write access
+t = (-1, -2, -3)
+
+t = tuple([4, 5, 6])
+# type conversion list -> tuple
+
+t = tuple("text")
+# type conversion string -> tuple
+# ('t', 'e', 'x', 't')
+\end{minted}
+\end{codebox}
+\end{columns}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]{\inPy{set}s and \inPy{frozenset}s}
+%
+\begin{columns}[T]
+\column{.5\linewidth}
+\begin{itemize}
+\item \inPy{set}s
+	\begin{itemize}
+	\item Data containers for \emph{unique values}
+	\item \emph{mutable}
+	\item Syntax: in \{curly brackets\}
+	\item Important methods: \texttt{add}, \texttt{clear}, \texttt{difference}, \texttt{intersection}, \texttt{union}
+	\item Addition is not defined for \inPy{set}s (but logical or (\texttt{|}), as well as logical and (\texttt{\&}))
+	\end{itemize}
+\item \inPy{frozenset}s
+	\begin{itemize}
+	\item Just like \inPy{set}s, but \emph{immutable}
+	\item No syntax element of their own, but via constructor: \inPy{variable = frozenset(container)}
+	\end{itemize}
+\end{itemize}
+%
+\column{.5\linewidth}
+\begin{codebox}[Example: \texttt{set}s]
+\begin{minted}[linenos, fontsize=\scriptsize]{python}
+s = {1, 2, 3, 2}
+print(s)        #  {1, 2, 3}
+# s[0] = -1     
+# no write access to individual elements
+
+s.add(4)        # but updates possible
+s = s.intersection({2, 4, 6})
+print(s)        # {2, 4}
+
+s = set("aardvark")
+print(s)        #{'r', 'v', 'k', 'd', 'a'}
+# order is not preserved
+\end{minted}
+\end{codebox}
+\end{columns}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]{\inPy{range}s}
+%
+\begin{columns}[T]
+\column{.5\linewidth}
+\begin{itemize}
+\item Idea: low-memory-container for \inPy{int}egers
+\item \inPy{start, stop, stride}
+\item Really only stores these three values
+\item Generates everything in between \enquote{on demand}
+\item \texttt{start} inclusive, \texttt{stop} exclusive
+\item \texttt{stride}: optional, default: \inPy{1}
+\item \texttt{stride} may be negative
+\item \texttt{start}, \texttt{stop}, \texttt{stride}: \emph{\inPy{int}egers only}
+\end{itemize}
+%
+\column{.5\linewidth}
+\begin{codebox}[Example: \texttt{range}s]
+\begin{minted}[linenos, fontsize=\scriptsize]{python}
+r = range(1, 10, 2)
+print(r)         # range(1, 10, 2)
+print(list(r))   # [1, 3, 5, 7, 9]
+
+r = range(1, 5)
+print(list(r))   # [1, 2, 3, 4]
+
+print(list(range(5, 0, -1)))
+# [5, 4, 3, 2, 1]
+
+\end{minted}
+\end{codebox}
+\end{columns}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]{\inPy{dict}ionaries}
+%
+\begin{columns}[T]
+\column{.5\linewidth}
+\begin{itemize}
+\item \enquote{\inPy{list} with arbitrary \emph{keys} as indices}
+\item key: (almost) arbitrary value, \eg a string
+\item \{curly brackets\}, key-value pairs, linked with a colon (:)
+\item Important Methods:
+	\begin{itemize}
+	\item \texttt{keys} -- returns (something like) a \inPy{list} of keys
+	\item \texttt{values} -- returns (something like) a \inPy{list} of values
+	\item \texttt{items} -- returns (something like) a \inPy{list} of \inPy{tuple}s (key, value)
+	\end{itemize}
+\end{itemize}
+%
+\column{.5\linewidth}
+\begin{codebox}[Example: \texttt{range}s]
+\begin{minted}[linenos, fontsize=\scriptsize]{python}
+d = {'north' : 12, 'east' : 9,
+     'south' :  6, 'west' : 3}
+
+print(d['north'])      # 12
+print(list(d.keys()))
+# ['north', 'east', 'south', 'west']
+
+print(list(d.items())[0:2])
+# [('north', 12), ('east', 9)]
+
+d['north'] = 0
+# write access possible, too
+\end{minted}
+\end{codebox}
+\end{columns}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]{Special Functions and Operators for Containers (I)}
+%
+\begin{itemize}
+\item \inPy{in}: computes a \inPy{bool}ean: is value in container?
+	\begin{itemize}
+	\item \inPy{1 in [1, 2, 3]} returns \inPy{True}
+	\item \inPy{[1] in [1, 2, 3]} returns \inPy{False}
+	\item \inPy{1 in {1 : 'a', 2 : 'b'}} returns \inPy{True}
+	\item \inPy{'a' in {1 : 'a', 2 : 'b'}} returns \inPy{False}
+	\item \inPy{'a' in {1 : 'a', 2 : 'b'}.values()} returns \inPy{True}
+	\end{itemize}
+\item \inPy{len} -- returns number of elements within the container
+\item \inPy{reversed} and \inPy{sorted} -- returns a \emph{copy} of the container with reversed or order \emph{as a \inPy{list}}
+\end{itemize}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]{Special Functions and Operators for Containers (II)}
+%
+\begin{itemize}
+\item Comparison operators (\texttt{==}, \texttt{<}, \texttt{>})
+	\begin{itemize}
+	\item Compare element-wise; decision is made at first non-equal value
+	\item Cf. Strings: \inPy{"aardvark" < "antilope"} (lexicographical order)
+	\item \inPy{[1, 5, 7] < [1, 5, 9, -3]} for the same reason.
+	\end{itemize}
+\item \inPy{zip} -- put lists \enquote{side by side}, create \texttt{tuple}s with elements from each container \\
+	\begin{codebox}[example: \texttt{zip}]
+	\begin{minted}[linenos, fontsize=\scriptsize]{python}
+A = ["Gryffindor", "Ravenclaw", "Hufflepuff", "Slytherin"]
+B = ["red", "blue", "yellow", "green"]
+print(list(zip(A, B)))
+	\end{minted}
+	\end{codebox}
+	\begin{cmdbox}[Output: \texttt{zip}]
+	\begin{minted}[fontsize=\scriptsize]{text}
+[("Gryffindor", "red"), ("Ravenclaw", "blue"),
+ ("Hufflepuff", "yellow"), ("Slytherin", "green")]
+	\end{minted}
+	\end{cmdbox}
+\end{itemize}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}{Chapter 5}
+%
+\begin{itemize}
+\item \inPy{for}-Loops
+\item Unpacking of \inPy{tuple}s
+\item List Comprehension
+\end{itemize}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]{\inPy{for}-Loops}
+%
+\begin{columns}[T]
+\column{.5\linewidth}
+\begin{itemize}
+\item Idea: do [actions] \emph{for each element} in a container
+\item Container: \inPy{list}s, \inPy{tuple}s, \inPy{range}s, \inPy{dict}s, ...
+\item Action: arbitrary code (things you know already and stuff I'll show you later)
+\item Can be multiple lines of code
+\item[\Thus] Block structure: Indentation
+\item Can be nested
+\item Cf. \inPy{if}-Statements
+\end{itemize}
+%
+\column{.5\linewidth}
+\begin{codebox}[Syntax: \texttt{for}-Loops]
+\begin{minted}[fontsize=\scriptsize]{python}
+for element in container :
+    actions
+
+further code (independent of loop)
+\end{minted}
+\end{codebox}
+%
+\begin{itemize}
+\item \texttt{element} is a \emph{new variable}
+\item will be \enquote{filled} with the contents of the container, in sequence
+\end{itemize}
+\end{columns}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]
+%
+\begin{codebox}[Example: \texttt{for}-Loop with \texttt{list}s]
+\begin{minted}[fontsize=\scriptsize, linenos]{python}
+tasklist = ["write the script", "drink some coffee", "drink some more coffee"]
+
+print("Your tasks today:")
+for task in tasklist :
+    print("*", task)
+
+print("Do it now!")
+\end{minted}
+\end{codebox}
+%
+\begin{cmdbox}[Output: \texttt{for}-Loop with \texttt{list}s]
+\begin{minted}[fontsize=\scriptsize]{text}
+Your tasks today:
+* write the script
+* drink some coffee
+* drink some more coffee
+Do it now!
+\end{minted}
+\end{cmdbox}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]
+%
+\begin{codebox}[Example: \texttt{for}-loop with \texttt{range}s -- counter loops]
+\begin{minted}[fontsize=\scriptsize, linenos]{python}
+print("the first 10 square numbers are:")
+for i in range(10) :
+    print(f"{i}² = {i**2:2}")
+\end{minted}
+\end{codebox}
+%
+\begin{cmdbox}[Output: \texttt{for}-loop with \texttt{range}s -- counter loops]
+\begin{minted}[fontsize=\scriptsize]{text}
+the first 10 square numbers are:
+0² =  0
+1² =  1
+2² =  4
+3² =  9
+4² = 16
+5² = 25
+6² = 36
+7² = 49
+8² = 64
+9² = 81
+\end{minted}
+\end{cmdbox}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]
+%
+\begin{codebox}[Example: \texttt{for}-Loops and unpacking of \texttt{tuple}s]
+\begin{minted}[fontsize=\scriptsize, linenos]{python}
+books = [("Frank Herbert", "Dune"),
+         ("Douglas Adams", "The Hitchhikers Guide To The Galaxy"),
+         ("Randall Munroe", "What If"),
+         ("Isaac Asimov", "Foundation"),
+         ("Willy Russell", "Educating Rita"),
+         ("Moving Pictures", "Terry Pratchett")]
+print("You should definitively read:")
+for author, title in books :
+    print("*", title, "by", author)
+\end{minted}
+\end{codebox}
+%
+\begin{cmdbox}[Output: \texttt{for}-Loops and unpacking of \texttt{tuple}s]
+\begin{minted}[fontsize=\scriptsize]{text}
+You should definitively read:
+* Dune by Frank Herbert
+* The Hitchhikers Guide To The Galaxy by Douglas Adams
+* What If by Randall Munroe
+* Foundation by Isaac Asimov
+* Educating Rita by Willy Russell
+* Moving Pictures by Terry Pratchett
+\end{minted}
+\end{cmdbox}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]
+%
+\begin{codebox}[Example: \texttt{for}-Loops without unpacking of \texttt{tuple}s]
+\begin{minted}[fontsize=\scriptsize, linenos]{python}
+import math
+vectors = [(1, 1), (4, 7), (-1, 2)]
+for v in vectors :
+    print("vector", v, "has length", math.hypot(v[0], v[1]))
+\end{minted}
+\end{codebox}
+%
+\begin{cmdbox}[Output: \texttt{for}-Loops without unpacking of \texttt{tuple}s]
+\begin{minted}[fontsize=\scriptsize]{text}
+vector (1, 1) has length 1.4142135623730951
+vector (4, 7) has length 8.06225774829855
+vector (-1, 2) has length 2.23606797749979
+\end{minted}
+\end{cmdbox}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]
+%
+\begin{hintbox}[\texttt{enumerate}]
+The function \inPy{enumerate} generates \inPy{tuple}s holding the indices and elements within a container.
+\end{hintbox}
+%
+\begin{codebox}[Example: \texttt{for}-loop with \texttt{enumerate}]
+\begin{minted}[fontsize=\scriptsize, linenos]{python}
+tasklist = ["write the script", "drink some coffee", "drink more coffee"]
+print("Your tasks today:")
+for i, task in enumerate(tasklist) :
+    print(f"{i + 1}. {task}")
+\end{minted}
+\end{codebox}
+%
+\begin{cmdbox}[Output: \texttt{for}-loop with \texttt{enumerate}]
+\begin{minted}[fontsize=\scriptsize]{text}
+Your tasks today:
+1. write the script
+2. drink some coffee
+3. drink more coffee
+\end{minted}
+\end{cmdbox}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]
+%
+\begin{codebox}[Example: \texttt{for}-Loops with \texttt{zip}]
+\begin{minted}[fontsize=\scriptsize, linenos]{python}
+data1 = [1.7, 2.2, -4.1]
+data2 = [1.8, 2.0, -3.8]
+print("Difference in datasets:")
+for i, t in enumerate(zip(data1, data2)) :
+    print(f"Datapoint {i}: {t} differs by : {t[0] - t[1]}")
+\end{minted}
+\end{codebox}
+%
+\begin{cmdbox}[Output: \texttt{for}-Schleifen mit \texttt{zip}]
+\begin{minted}[fontsize=\scriptsize]{text}
+Datapoint 0: (1.7, 1.8) differs by : -0.10000000000000009
+Datapoint 1: (2.2, 2.0) differs by : 0.20000000000000018
+Datapoint 2: (-4.1, -3.8) differs by : -0.2999999999999998
+\end{minted}
+\end{cmdbox}
+%
+\begin{hintbox}[\texttt{zip}]
+The function \inPy{zip} generates \inPy{tuple}s from container-elements with same index.
+\end{hintbox}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]
+%
+\begin{codebox}[Example: \texttt{for}-loops with \texttt{dict}s]
+\begin{minted}[fontsize=\scriptsize, linenos]{python}
+houseStark = {"Sigil" : "A grey direwolf on a white field",
+              "Words" : "Winter Is Coming",
+              "Seat"  : "Winterfell"}
+
+print("Summary of House Stark:")
+for key, value in houseStark.items() :
+    print(f"{key:5}: {value}")
+\end{minted}
+\end{codebox}
+%
+\begin{cmdbox}[Output: \texttt{for}-loops with \texttt{dict}s]
+\begin{minted}[fontsize=\scriptsize]{text}
+Summary of House Stark:
+Sigil: A grey direwolf on a white field
+Words: Winter Is Coming
+Seat : Winterfell
+\end{minted}
+\end{cmdbox}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]{List Comprehension}
+%
+Idea: Comfortably create containers from contents of another container
+\begin{codebox}[Syntax: List Comprehension]
+\begin{minted}[fontsize=\scriptsize]{python}
+listVariable = [      expression for element in container if condition]
+setVariable  = {      expression for element in container if condition}
+dictVariable = {key : expression for element in container if condition}
+\end{minted}
+\end{codebox}
+%
+\begin{itemize}
+\item \texttt{expression} : arbitrary \enquote{computation}, describing an element of the new container \texttt{XXXVariable}
+\item \texttt{element}    : helper variable, receiving elements from \texttt{container} (as seen with \inPy{for})
+\item \texttt{container}  : A \inPy{list}, \inPy{range}, ...
+\item \texttt{condition}  : expression that tells which elements to actually include in the new container
+\item The \inPy{if condition} clause is optional
+\end{itemize}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]
+%
+\begin{codebox}[Example: List Comprehension]
+\begin{minted}[fontsize=\scriptsize, linenos]{python}
+import math
+
+N = 3
+eValues = [math.exp(k) for k in range(N)]
+
+print(eValues)
+\end{minted}
+\end{codebox}
+%
+\begin{cmdbox}[Output: List Comprehension]
+\begin{minted}[fontsize=\scriptsize]{text}
+[1.0, 2.718281828459045, 7.38905609893065]
+\end{minted}
+\end{cmdbox}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]
+%
+\begin{codebox}[Example: Telefone-Matrix with List Comprehension]
+\begin{minted}[fontsize=\scriptsize, linenos]{python}
+telephone = [[3 * row + column + 1 for column in range(3)]
+             for row in range(3)
+            ]
+
+for line in telephone :
+    print(line)
+
+print(telephone)
+\end{minted}
+\end{codebox}
+%
+\begin{cmdbox}[Output: Telefone-Matrix with List Comprehension]
+\begin{minted}[fontsize=\scriptsize]{text}
+[1, 2, 3]
+[4, 5, 6]
+[7, 8, 9]
+[[1, 2, 3], [4, 5, 6], [7, 8, 9]]
+\end{minted}
+\end{cmdbox}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]
+%
+\begin{codebox}[Example: Prime numbers with List Comprehension]
+\begin{minted}[fontsize=\scriptsize, linenos]{python}
+N = 100
+
+primeNumbers = [
+    i for i in range (2, N)          # take all numbers i between 2 and N ...
+    if len (                         # ... for which the number of divisors ...
+        [j for j in range (1, i+1)   # ... (i.e. numbers between 1 und i ...
+        if i % j == 0]               # ... that give no remainder) ...
+    ) == 2                           # ... is equal to 2.
+]
+
+print(primeNumbers)
+
+\end{minted}
+\end{codebox}
+%
+\begin{cmdbox}[Output: Prime numbers with List Comprehension]
+\begin{minted}[fontsize=\scriptsize]{text}
+[2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71,
+73, 79, 83, 89, 97]
+\end{minted}
+\end{cmdbox}
+%
+\end{frame}
