@@ -8,436 +8,25 @@
 
 \begin{frame}{Recap}
 %
-\begin{columns}[T]
-\column{.5\linewidth}
 \begin{itemize}
-\item More containers
+\item \inPy{while}-loops
 	\begin{itemize}
-	\item \inPy{str}ings, \inPy{tuple}s, \inPy{set}s und \inPy{dict}s
-	\item (im)mutability, uniqueness, keys
-	\item \inPy{range}s -- counters
+	\item Repeat code as long as (\emph{while}) a condition is satisfied
 	\end{itemize}
-\item \inPy{for}-loops
+\item \inPy{break} and \inPy{continue}
 	\begin{itemize}
-	\item \enquote{for each element in container, do ...}
-	\item Can be nested
+	\item Stop looping early (\inPy{break}) or skip part of the loop body (\inPy{continue})
+	\end{itemize}
+\item \inPy{else} with \inPy{for} and \inPy{while}
+	\begin{itemize}
+	\item Execute code only when end of loop is reached (\inPy{for}) ...
+	\item ... or when exited via \inPy{break} (\inPy{while})
 	\end{itemize}
 \end{itemize}
-%
-\column{.5\linewidth}
-\begin{itemize}
-\item List Comprehension
-	\begin{itemize}
-	\item Create \inPy{list}s, \inPy{set}s or \inPy{dict}s quickly from \inPy{for}-loops
-	\end{itemize}
-\item \inPy{enumerate}: generate \inPy{tuple}s of index and container elements
-\item \inPy{zip}: combine elements from multiple containers into \inPy{tuple}s
-\end{itemize}
-
-\end{columns}
 %
 \begin{center}
 	\emph{Any Questions?}
 \end{center}
-%
-\end{frame}
-
-% =========================================================================== %
-
-\begin{frame}[fragile]{From the Exercises}
-%
-%\vspace{-5pt}
-\begin{tcbraster}[raster columns=2,
-                  raster equal height,
-                  nobeforeafter,
-                  raster column skip=0.5cm]
-\begin{codebox}[Example: Christmas{,} three loops]
-\begin{minted}[fontsize=\scriptsize, linenos]{python3}
-height = 7
-
-for row in range(height) :
-  for column in range(height - row) :
-    print(" ", end="")
-  for column in range(2 * row + 1)  :
-    print("*", end="")
-  print("")
-\end{minted}
-\end{codebox}
-%
-\begin{codebox}[Example: Christmas{,} two loops]
-\begin{minted}[fontsize=\scriptsize, linenos]{python}
-height = 7
-
-for   row    in range(    height    ) :
-  for column in range(2 * height + 1) :
-    f = abs(column - height) < (row + 1)
-    
-    print("*" if f else " ", end="")
-  print("")
-\end{minted}
-\end{codebox}
-\end{tcbraster}
-%
-\begin{codebox}[Example: Christmas{,} one loop (\enquote{The Python Way} of writing code)]
-\begin{minted}[fontsize=\scriptsize, linenos]{python}
-height = 7
-for row in range(height) :
-  print(" " * (height - row - 1), "*" * (2 * row + 1))
-\end{minted}
-\end{codebox}
-%
-\end{frame}
-
-% =========================================================================== %
-
-\begin{frame}[fragile]{How to Code -- Analysis and Synthesis}
-%
-\begin{itemize}
-\item Analyze \emph{each individual word} of a problem statement
-	\begin{itemize}
-	\item Identify desired input and output
-	\item Human concepts
-	\item Computer concepts -- data types
-	\end{itemize}
-	
-\item Is it something you can solve right away?
-	\begin{itemize}
-	\item If no: is it composed of subproblems?
-	\item Recursion: are the subproblems solveable? Or are they composed of sub-sub-problems?
-	\end{itemize}
-
-\item Keep track of the \enquote{atoms} of your task
-	\begin{itemize}
-	\item Use clear variable names
-	\item Use a piece of paper! Draw Flowcharts, etc.
-	\item Comment what you found difficult
-	\end{itemize}
-
-\item Synthesis step
-	\begin{itemize}
-	\item Track back through your tree of sub-sub-problems
-	\item Piece together your atoms to a complete machine
-	\end{itemize}
-\end{itemize}
-%
-\end{frame}
-
-% =========================================================================== %
-
-\begin{frame}[fragile]{How to Code -- Analysis and Synthesis}
-%
-\begin{itemize}
-\item \emph{Create a String-variable. Find out, how often each character occurs within the text.}
-\item \emph{each chacaracter} \Thus Find out, which characters occur at all
-	\begin{itemize}
-	\item Input: string.
-	\item Desired output: list of characters
-	\item List \Thus Regard known container types \Thus \inPy{set}: only \emph{unique} elements
-	\item Can be formed directly from \inPy{str}ings
-	\item[\Thus] Problem partially solved!
-	\end{itemize}
-\item \emph{how often do they occur in the text} \Thus Count characters
-	\begin{itemize}
-	\item Input: string, and list (set) of characters
-	\item Desired output: list, assignment character $\leftrightarrow$ number
-	\item[\Thus] \inPy{dict}
-	\item How to count: manually with \inPy{for}-loop
-	\item Or automatically: method \inPy{str.count}
-	\end{itemize}
-\end{itemize}
-%
-\end{frame}
-
-% =========================================================================== %
-
-\begin{frame}[fragile]
-%
-%
-\begin{codebox}[Example: Count Characters]
-\begin{minted}[fontsize=\scriptsize, linenos]{python}
-text = "the quick brown fox jumps over the lazy dog"
-uniqueChars = set(text)
-sortedChars = sorted(uniqueChars)
-
-# Do it manually
-counts = {char : 0 for char in uniqueChars}      # create dict with initial value 0
-for char in text :                               # count manually
-  counts[char] += 1
-
-# Do it automatically
-autoCounts = {char : text.count(char) for char in uniqueChars}
-
-
-print("Analysis of '" + text + "':")
-for char in sortedChars :
-  print(char, "occurs", counts[char], "times;",
-        "automatic count yields", autoCounts[char], ", too")
-\end{minted}
-\end{codebox}
-%
-\end{frame}
-
-% =========================================================================== %
-
-\begin{frame}[fragile]{Chapter 5}
-%
-\begin{itemize}
-\item \inPy{while}-Loops
-\item Altering the flux of loops
-\item \inPy{else} with \inPy{while} and \inPy{for}
-\end{itemize}
-%
-\end{frame}
-
-% =========================================================================== %
-
-\begin{frame}[fragile]{\inPy{while}-Loops}
-%
-\begin{columns}[T]
-\column{.5\linewidth}
-\begin{itemize}
-\item Idea: Repeat \texttt{[statements]}, as long as \texttt{[condition]} is satisfied (cf. human language)
-\item Check \texttt{[condition]} \emph{before} each repetition
-\item Possible to create \emph{infinite loops}
-	\begin{itemize}
-	\item May be intentional
-	\item Most often by mistake
-	\item Stop running code:\\
-		\texttt{[CTRL] + C} in terminal
-	\end{itemize}
-\end{itemize}
-%
-\column{.5\linewidth}
-\begin{codebox}[Syntax: \texttt{while}]
-\begin{minted}[fontsize=\scriptsize]{python}
-while condition :
-    statements
-\end{minted}
-\end{codebox}
-\end{columns}
-%
-\end{frame}
-
-% =========================================================================== %
-
-\begin{frame}[fragile]
-%
-\begin{codebox}[Example: Compound Interest (I)]
-\begin{minted}[linenos, fontsize=\scriptsize]{python}
-capital  = float(input("Please provide your seed capital:"))
-interest = float(input("Please provide the interest rate:"))
-limit    = float(input("Please provide the savings goal :"))
-
-years    = 0
-
-while capital < limit :
-    capital *= 1 + interest
-    years   += 1
-
-print("After", years, "years you've reached your savings goal.")
-\end{minted}
-\end{codebox}
-%
-\end{frame}
-% =========================================================================== %
-
-\begin{frame}[fragile]{Altering the flux of loops: \inPy{break}}
-%
-\begin{itemize}
-\item Loops (\ie both, \inPy{while} and \inPy{for}) can be exited at any time
-\item Useful for secondary conditions within the loop
-\item Should be tied to a condition\\
- \Thus \inPy{if}
-\item Nested loops: exit \emph{current level}
-	\begin{itemize}
-	\item If you want to leave \emph{multiple levels}: Use flags
-	\end{itemize}
-\end{itemize}
-%
-\end{frame}
-
-% =========================================================================== %
-
-\begin{frame}[fragile]
-\begin{codebox}[Beispiel: \texttt{break} with a single level]
-\begin{minted}[linenos, fontsize=\scriptsize]{python}
-count = 0
-value = 0
-
-while count < 12 :
-    newValue = float(input("Please provide a value: "))
-    value += newValue
-    count += 1
-  
-    if value > 9000 :
-        value = "over nine thousand!!"
-        break
-  
-    print("Current total after entering", count, "values:", value)
-
-print("Total:", value)
-\end{minted}
-\end{codebox}
-\end{frame}
-
-% =========================================================================== %
-
-\begin{frame}[fragile]
-%
-\vspace{-6pt}
-\begin{codebox}[Example: \texttt{break} with multiple levels]
-\begin{minted}[linenos, fontsize=\scriptsize]{python}
-import random
-
-total = 0
-quitFlag = False
-
-while total < 10 :
-    batch = [random.randint(-3, 20) for i in range(5)]
-    
-    for num in batch :
-        print(num, end = ", ")
-
-        if num < 0:
-            print("secondary condition: negative number")
-            quitFlag = True
-            break
-            
-    if quitFlag : break
-    total += num
-    
-print("total:", total)
-\end{minted}
-\end{codebox}
-\end{frame}
-
-% =========================================================================== %
-
-\begin{frame}[fragile]{Altering The Control Flux: \inPy{continue}}
-%
-\begin{itemize}
-\item Skip rest of loop body \emph{without exiting it}
-\item Works for both, \inPy{while} and \inPy{for}
-\end{itemize}
-%
-\begin{codebox}[Example: \texttt{continue}]
-\begin{minted}[linenos, fontsize=\scriptsize]{python}
-container = []
-while len(container) < 3 :
-    value = int(input("Please provide an even number: "))
-    
-    if value % 2 :
-        print(value, "is odd and hence invalid.")
-        continue
-        
-    container.append(value)
-    print("Input so far: ", container)
-
-print("done.")
-\end{minted}
-\end{codebox}
-%
-\end{frame}
-
-% =========================================================================== %
-
-\begin{frame}[fragile]{\inPy{else} with \inPy{while} and \inPy{for}}
-%
-\begin{itemize}
-\item \inPy{else}-block is executed, if a loop terminates \emph{regularly}, \ie if it is not exited via \inPy{break}
-\item For both, \inPy{for} and \inPy{while}
-\item Idea \enquote{if not applicable}
-	\begin{itemize}
-	\item \inPy{for}: Trigger-Element not in a container (if trigger then break)
-	\item \inPy{while}: Trigger-Condition never met (same structure)
-	\end{itemize}
-\end{itemize}
-%
-\end{frame}
-
-% =========================================================================== %
-
-\begin{frame}[fragile]
-%
-\begin{codebox}[Example: Compound Interest (II)]
-\begin{minted}[linenos, fontsize=\scriptsize]{python}
-capital  = float(input("Please provide your seed capital: "))
-interest = float(input("Please provide the interest rate: "))
-limit    = float(input("Please provide the savings goal : "))
-
-years    = 0
-while capital < limit :
-    if interest <= 0 :
-        print("With this interest rate, the savings goal cannot be achieved.")
-        break
-    
-    capital *= 1 + interest
-    years   += 1
-    
-else :
-    print("After", years, "years you've reached your savings goal.")
-  
-print("DONE.")
-\end{minted}
-\end{codebox}
-%
-\end{frame}
-
-% =========================================================================== %
-
-\begin{frame}[fragile]
-%
-\vspace{-5pt}
-\begin{codebox}[Example: \texttt{for} with \texttt{break}{,} \texttt{continue} and \texttt{else}]
-\begin{minted}[linenos, fontsize=\scriptsize]{python}
-tasks = [("hidden", "watch Fullmetal Alchemist"),
-         ("open", "work very hard on Python"),
-         ("open", "drink all the coffee")]
-         
-search = ["watch", "work"]
-
-for keyword in search :
-    for ID, (state, task) in enumerate(tasks) :
-        if state == "hidden" : continue
-        if keyword in task :
-            print(keyword, "was found in task ID", ID)
-            break
-    else :
-        print(keyword, "was not found in the tasks.")
-\end{minted}
-\end{codebox}
-%
-\begin{cmdbox}[Output: \texttt{for} with \texttt{break}{,} \texttt{continue} and \texttt{else}]
-\begin{minted}[fontsize=\scriptsize]{text}
-watch was not found in the tasks.
-work was found in task ID 1
-\end{minted}
-\end{cmdbox}
-%
-\end{frame}
-
-% =========================================================================== %
-
-\begin{frame}{Juxtaposition: \inPy{for} vs. \inPy{while}}
-%
-\begin{itemize}
-\item Both statements: loops -- repetition of statements
-\item \inPy{for}: with containers
-\item \inPy{while}: with conditions
-\item \inPy{for} can be thought of as a \emph{specialized} \inPy{while} loop:
-	\begin{itemize}
-	\item \emph{While the container is not exhausted, do ...}
-	\item Use an index variable (not recommended)
-	\item Internally, \inPy{for}-loops are handled that way
-	\end{itemize}
-\end{itemize}
-%
-\end{frame}
-
-% =========================================================================== %
-
-\begin{frame}
-%
 %
 \end{frame}
 
@@ -498,15 +87,90 @@ Functions have to be defined \emph{before} they are called for the first time.
 
 % =========================================================================== %
 
+\begin{frame}[fragile]
+%
+\begin{codebox}[Example: Simple Functions]
+\begin{minted}[linenos, fontsize=\scriptsize]{python3}
+def printHeadline() :
+    print("# ========================================================= #")
+    print("#                        H e a d l i n e                    #")
+    print("# ========================================================= #")
+    return
+    print("this code will never be executed")
+
+def polynomial(x) :
+    return x**2 - 5*x + 3
+
+def total(a, b)
+    return a + b
+    
+printHeadline()
+print( polynomial(5) )                    # Output: 3
+print( total("some", " text") )           # Output: some text
+\end{minted}
+\end{codebox}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}{Local Variables and Scopes}
+%
+\begin{itemize}
+\item Desire: Function call should have no side effects
+\item But: Functions may need to use auxillary variables
+	\begin{itemize}
+	\item Values stay in memory \thus side effect
+	\item May overwrite other values if variable name already in use \thus side effect
+	\end{itemize}
+\item Solution: Functions have their own variables
+	\begin{itemize}
+	\item Function as a closed box, separate from rest of the code
+	\item Not just jumping around, but starting an independent process
+	\end{itemize}
+\item Term \emph{Scope}
+	\begin{itemize}
+	\item Idea of \enquote{lifetime of a variable}
+	\item Symbol only exists in a given range of code
+	\item Variable is deleted when exiting the function
+	\item May temporarily overwrite another symbol
+	\end{itemize}
+\end{itemize}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]
+%
+\begin{codebox}[Example: Scopes]
+\begin{minted}[linenos, fontsize=\scriptsize]{python3}
+def func() :
+    x = 5
+    y = 5
+    print(x, y)           # Output: 5 5
+
+x = 7
+print(x)                  # Output: 7
+func()
+print(x)                  # Output: 7
+# print(y)                # Error: y not defined in this scope!
+\end{minted}
+\end{codebox}
+%
+\end{frame}
+
+% =========================================================================== %
+
 \begin{frame}[fragile]{Parameters (aka Arguments)}
 %
 \begin{itemize}
-\item Function oversees \emph{its own set of new variables}. Initial values as \enquote{sent} at the call
-\item In definition: variable names, separated by commas
-\item In call: expressions, separated by commas
-\item Thought model: Working copy of the \emph{evaluated} expressions is stored in \emph{local} variables of the functions
+\item Parameters: local variables!
+\item Initialized with a \emph{copy} of the value in the call parameter list
+\item Idea: \enquote{Send information into the function}
 \end{itemize}
 %
+\vspace{5pt}
 \begin{tcbraster}[raster columns=2,
                   raster equal height,
                   nobeforeafter,
@@ -545,7 +209,8 @@ Line & $x_{main}$ & $x_{func}$ & $y_{func}$ \tabcrlf
 
 \begin{frame}[fragile]
 %
-\begin{codebox}[Example: Exponential as a Funktion]
+\vspace{-5pt}
+\begin{codebox}[Example: Exponential as a Function]
 \begin{minted}[linenos, fontsize=\scriptsize]{python}
 def expFunction(x0) :
     x           = 1.0
@@ -558,13 +223,13 @@ def expFunction(x0) :
         result += x / denominator
     return result
 
-EulersNumber = expFunction(1.0)             # Call function, store result in variable
-print(f"Euler's Number is {EulersNumber}")
+result = expFunction(1.0)                   # Call function, store result in variable
+print(f"Euler's Number is {result}")
 print(f"e³ = {expFunction(3.0)}")           # Forward result to another function
 \end{minted}
 \end{codebox}
 
-\begin{cmdbox}[Output: Exponential as a Funktion]
+\begin{cmdbox}[Output: Exponential as a Function]
 \begin{minted}[fontsize=\scriptsize]{text}
 Euler's Number is 2.7182815255731922
 e³ = 20.063392857142855
@@ -577,7 +242,8 @@ e³ = 20.063392857142855
 
 \begin{frame}[fragile]
 %
-\begin{codebox}[Example: Funktion \enquote{without} Return Value]
+\vspace{-7pt}
+\begin{codebox}[Example: Function \enquote{without} Return Value]
 \begin{minted}[linenos, fontsize=\scriptsize]{python}
 import math
 
@@ -589,12 +255,14 @@ def printBoxed(text, boxSize) :
     print("+" +               (boxSize - 2) * "-"           + "+")
     print("|" + spacesLeft * " " + text + spacesRight * " " + "|")
     print("+" +               (boxSize - 2) * "-"           + "+")
+
 reVal = printBoxed("Don't forget to be awesome!", 60)
 print("The function returned:" , reVal)
 \end{minted}
 \end{codebox}
 
-\begin{cmdbox}[Output: Funktion \enquote{without} Return Value]
+\vspace{-12pt}
+\begin{cmdbox}[Output: Function \enquote{without} Return Value]
 \begin{minted}[fontsize=\scriptsize]{text}
 +----------------------------------------------------------+
 |               Don't forget to be awesome!                |
@@ -605,51 +273,23 @@ The function returned: None
 %
 \end{frame}
 
-% =========================================================================== %\\
-
-\begin{frame}[fragile]
-%
-\begin{hintbox}[KISS: Keep It Simple{,} Stupid]
-\emph{A function should do one thing and one thing only.}
-
-\vspace{6pt}
-Write your functions such that they \emph{either} return a value \emph{or} print on screen.
-
-\vspace{6pt}
-If you want to solve multiple problems, write multiple functions. If one problem can be decomposed into $N$ subproblems, write $N+1$ functions:
-
-\begin{codebox}
-\begin{minted}[fontsize=\scriptsize]{python3}
-def subProblemA (...) :
-     ...
-   
-def subProblemB (...) :
-     ...
-   
-def fullProblem (...) :
-     subProblemA(...)
-     subProblemB(...) 
-\end{minted}
-\end{codebox}
-\end{hintbox}
-%
-\end{frame}
-
 % =========================================================================== %
 
 \begin{frame}[fragile]{By-Value und By-Reference-Parameter}
 %
 \begin{itemize}
-\item Pass By Value: Function \enquote{doesn't know}, where original information was stored
-\item Picture: Pass on a working copy (pass by value) -- only partially correct
-\item In fact: working copy of \emph{addresses}
+\item IT: World: two standards for functions: pass by value and by reference
+\item By value: pure working copy.
+\item By reference: where to find the information
+\item Python: \emph{working copy of reference}
+\item (Im)mutability and memory location affect outcome
 \end{itemize}
 %
 \begin{tcbraster}[raster columns=2,
                   raster equal height,
                   nobeforeafter,
                   raster column skip=0.5cm]
-\begin{codebox}[Example: Passing a referenz by value]
+\begin{codebox}[Example: Passing Mutables]
 \begin{minted}[fontsize=\scriptsize, linenos]{python}
 def foobar(data) :
     data.append(1)
@@ -661,7 +301,7 @@ print("on module level: data =", data)
 \end{minted}
 \end{codebox}
 %
-\begin{cmdbox}[Output: Passing a referenz by value]
+\begin{cmdbox}[Output: Passing Mutables]
 \begin{minted}[fontsize=\scriptsize]{text}
 in foobar: data = [1, 2]
 on module level: data = [1]
@@ -679,30 +319,35 @@ on module level: data = [1]
 \begin{center}
 \begin{tikzpicture}
   [ 
-    cell/.style={text width=8mm,
-      text height=4mm, draw=black, inner sep=1mm},
+    cell/.style={
+      text width=9mm,
+      text height=4mm,
+      draw=black,
+      inner sep=1mm,
+      minimum height=7mm
+    },
     ld/.style={draw=blue,shorten >=2pt,->}
   ]
-  \node (a1) at (0,4) [cell] {\ttfamily ...};
-  \node (a2) at (1,4) [cell] {\ttfamily  []};
-  \node (a3) at (2,4) [cell] {\ttfamily ...};
-  \node (a4) at (3,4) [cell] {\ttfamily ...};
-  \node (a5) at (4,4) [cell] {\ttfamily ...};
-  \node (a6) at (5,4) [cell] {\ttfamily ...};
+  \node (a1) at (0.0,4) [cell] {\ttfamily ...};
+  \node (a2) at (1.1,4) [cell] {\ttfamily  []};
+  \node (a3) at (2.2,4) [cell] {\ttfamily ...};
+  \node (a4) at (3.3,4) [cell] {\ttfamily ...};
+  \node (a5) at (4.4,4) [cell] {\ttfamily ...};
+  \node (a6) at (5.5,4) [cell] {\ttfamily ...};
 
-  \node (b1) at (0,2) [cell] {\ttfamily ...};
-  \node (b2) at (1,2) [cell] {\ttfamily [1]};
-  \node (b3) at (2,2) [cell] {\ttfamily ...};
-  \node (b4) at (3,2) [cell] {\ttfamily ...};
-  \node (b5) at (4,2) [cell] {\ttfamily ...};
-  \node (b6) at (5,2) [cell] {\ttfamily ...};
+  \node (b1) at (0.0,2) [cell] {\ttfamily ...};
+  \node (b2) at (1.1,2) [cell] {\ttfamily [1]};
+  \node (b3) at (2.2,2) [cell] {\ttfamily ...};
+  \node (b4) at (3.3,2) [cell] {\ttfamily ...};
+  \node (b5) at (4.4,2) [cell] {\ttfamily ...};
+  \node (b6) at (5.5,2) [cell] {\ttfamily ...};
 
-  \node (c1) at (0,0) [cell] {\ttfamily ...};
-  \node (c2) at (1,0) [cell] {\ttfamily [1]};
-  \node (c3) at (2,0) [cell] {\ttfamily ...};
-  \node (c4) at (3,0) [cell] {\ttfamily ...};
-  \node (c5) at (4,0) [cell] {\ttfamily ...};
-  \node (c6) at (5,0) [cell] {\ttfamily [1,2]};
+  \node (c1) at (0.0,0) [cell] {\ttfamily ...};
+  \node (c2) at (1.1,0) [cell] {\ttfamily [1]};
+  \node (c3) at (2.2,0) [cell] {\ttfamily ...};
+  \node (c4) at (3.3,0) [cell] {\ttfamily ...};
+  \node (c5) at (4.4,0) [cell] {\ttfamily ...};
+  \node (c6) at (5.5,0) [cell] {\ttfamily [1,2]};
   
   \node (A1) [below=2mm of a1]             {\tiny 0x27ff};
   \node (A2) [below=2mm of a2, color=teal] {\tiny 0x2800};
@@ -733,11 +378,141 @@ on module level: data = [1]
   \node (func)  [below=0mm of C6, color=blue] {\scriptsize address of \texttt{data} in \texttt{foobar}};
   
   \draw [->] (a6.east)arc(120:-115:1.0);		%start angle: stop angle : radius  
-  \node (step1) at (9,3) {\texttt{data.append(1)}};
+  \node (step1) at (9.3,3) {\texttt{data.append(1)}};
   \draw [->] (b6.east)arc(120:-115:1.0);
-  \node (step1) at (9,1) {\texttt{data = data + [2]}};
+  \node (step1) at (9.5,1) {\texttt{data = data + [2]}};
 \end{tikzpicture}
 \end{center}
+\end{tcolorbox}
+%
+\end{frame}
+
+% =========================================================================== %\\
+
+\begin{frame}[fragile]
+%
+\begin{tcolorbox}[title=Memory Model: \texttt{int}s]
+What does \inPy{x = 1337} look like internally?
+\vspace{20pt}
+\begin{center}
+\begin{tikzpicture}
+  [ 
+    cell/.style={text width=8mm,
+      text height=4mm, draw=black, inner sep=1mm},
+    ld/.style={draw=blue,shorten >=2pt,->}
+  ]
+  
+  \node  (invisible) at (-2, -0.25) {};
+  \node  (a0) at ( 0,0) [cell] {\ttfamily  ...};
+  \node  (a1) at ( 1,0) [cell] {\ttfamily @int};
+  \node  (a2) at ( 2,0) [cell] {\ttfamily @dat};
+  \node  (a3) at ( 3,0) [cell] {\ttfamily  8  };
+  \node  (a4) at ( 4,0) [cell] {\ttfamily  ...};
+  \node  (a5) at ( 5,0) [cell] {\ttfamily  ...};
+  \node  (a6) at ( 6,0) [cell] {\ttfamily 1337};
+  \node  (a7) at ( 7,0) [cell] {\ttfamily  ...};
+  
+  \node (b0) [above=1mm of a0] {\tiny 0xEFF8};
+  \node (b1) [above=1mm of a1, color=teal] {\tiny 0xF000};
+  \node (b2) [above=1mm of a2] {\tiny 0xF008};
+  \node (b3) [above=1mm of a3] {\tiny 0xF010};
+  \node (b4) [above=1mm of a4] {\tiny 0xF018};
+  \node (b5) [above=1mm of a5] {\tiny 0xF020};
+  \node (b6) [above=1mm of a6] {\tiny 0xF028};
+  \node (b7) [above=1mm of a7] {\tiny 0xF030};
+  
+  \draw [decorate, decoration={brace,amplitude=7pt}, xshift=-0pt, yshift=0pt]
+  		(+0.5, 1.0) -- ( 3.5, 1.0) node (x) [midway, yshift=+0.5cm] 
+		(braceDescriptor) {Descriptor of \texttt{x}};
+	
+  \draw [decorate, decoration={brace,amplitude=7pt}, xshift=-0pt, yshift=0pt]
+  		( 5.5, 1.0) -- ( 6.5, 1.0) node (y) [midway, yshift=+0.5cm] 
+		(braceContent) {Use data of \texttt{x}};
+
+	\draw [->, bend right=20]
+		(a2.south) to node 
+		[below] {cell content: 0xF028} 
+		(a6.south);
+			
+	\draw [->, bend left=20]
+		(a1.south) to node 
+		[below] {cell content: ID of class \inPy{int}} 
+		(invisible.south);
+		
+\end{tikzpicture}
+\end{center}
+
+\vspace{20pt}
+Internally, \texttt{x} is only the \emph{address of the descriptor}, \ie the value \texttt{0xF000}.\\
+Any access to the \emph{value of \texttt{x}} goes through a series of interpreteation steps!
+\end{tcolorbox}
+%
+\end{frame}
+
+% =========================================================================== %\\
+
+\begin{frame}[fragile]
+%
+\begin{tcolorbox}[title=Memory Model: \texttt{list}s]
+What does \inPy{lst = [x, 666]} look like internally?
+\vspace{10pt}
+\begin{center}
+\begin{tikzpicture}
+  [ 
+    cell/.style={text width=8mm,
+      text height=4mm, draw=black, inner sep=1mm},
+    ld/.style={draw=blue,shorten >=2pt,->}
+  ]
+  
+  \node  (invisible) at (-2, -0.25) {};
+  \node  (a0) at ( 0,0) [cell] {\ttfamily  ...};
+  \node  (a1) at ( 1,0) [cell] {\ttfamily @lst};
+  \node  (a2) at ( 2,0) [cell] {\ttfamily @dat};
+  \node  (a3) at ( 3,0) [cell] {\ttfamily  16 };
+  \node  (a4) at ( 4,0) [cell] {\ttfamily  ...};
+  \node  (a5) at ( 5,0) [cell] {\ttfamily  ...};
+  \node  (a6) at ( 6,0) [cell] {\ttfamily @x  };
+  \node  (a7) at ( 7,0) [cell] {\ttfamily @666};
+  \node  (a8) at ( 8,0) [cell] {\ttfamily  ...};
+  
+  \node (b0) [above=1mm of a0] {\tiny 0xF030};
+  \node (b1) [above=1mm of a1, color=teal] {\tiny 0xF000};
+  \node (b2) [above=1mm of a2] {\tiny 0xF038};
+  \node (b3) [above=1mm of a3] {\tiny 0xF040};
+  \node (b4) [above=1mm of a4] {\tiny 0xF048};
+  \node (b5) [above=1mm of a5] {\tiny 0xF050};
+  \node (b6) [above=1mm of a6] {\tiny 0xF058};
+  \node (b7) [above=1mm of a7] {\tiny 0xF060};
+  \node (b8) [above=1mm of a8] {\tiny 0xF068};
+  
+  \draw [decorate, decoration={brace,amplitude=7pt}, xshift=-0pt, yshift=0pt]
+  		(+0.5, 1.0) -- ( 3.5, 1.0) node (x) [midway, yshift=+0.5cm] 
+		(braceDescriptor) {Descriptor of \texttt{lst}};
+	
+  \draw [decorate, decoration={brace,amplitude=7pt}, xshift=-0pt, yshift=0pt]
+  		( 5.5, 1.0) -- ( 7.5, 1.0) node (y) [midway, yshift=+0.5cm] 
+		(braceContent) {Use data of \texttt{lst}};
+
+	\draw [->, bend right=20]
+		(a2.south) to node 
+		[below] {cell content: 0xF058} 
+		(a6.south);
+			
+	\draw [->, bend left=20]
+		(a1.south) to node 
+		[below] {cell content: ID of class \inPy{list}}
+		(invisible.south);
+	
+	\node (t6) at (6.8,-1.5) {\texttt{0xF028}};
+	\node (t7) at (8.5,-1.5) {\texttt{0xF430}};
+	
+	\draw [->, bend right=15] (a6.south) to node [below] {} (t6.north);
+	\draw [->, bend right=15] (a7.south) to node [below] {} (t7.north);
+\end{tikzpicture}
+\end{center}
+
+\vspace{10pt}
+The content of lists is actually only a series of addresses: each address references an object descriptor, even for literal constants! For constants, like \inPy{666} a new object descriptor is constructed \emph{somewhere}. They have no (exposed) symbol.
 \end{tcolorbox}
 %
 \end{frame}
@@ -749,7 +524,7 @@ on module level: data = [1]
 \begin{codebox}[Example: Passing Immutables]
 \begin{minted}[linenos, fontsize=\scriptsize]{python}
 def foobar(data) :
-    data = 2
+    data = 2           # immutable object is reconstructed somewhere else
     print("in foobar: data =", data)
 
 data = 1
@@ -769,16 +544,21 @@ on module level: data = 1
 
 % =========================================================================== %
 
-\begin{frame}{Scopes}
+\begin{frame}{Nonlocal Variables}
 %
 \begin{itemize}
-\item Code in function is \emph{separate} from the rest of the code
-\item Variables in a functions only exist \emph{locally}
-\item Lingu: Functions have their own \emph{scope}, variables belong to a scope
-\item In a function-scope you can \enquote{see} outside variables, but not vice versa
-\item Parameter list: variables of the function scope
-\item Local re-definition possible
-\item But: not after first read-access
+\item Variables in a function are not visible in another function or on module level
+\item But: variables on module level are visible in functions!
+\item Also holds for nested scopes (nested functions)
+\item \enquote{Can't see into a scope, but out of a scope}
+\item[\Thus] Variables not local to their function do exist
+\item Type of first access in a function defines behaviour
+	\begin{itemize}
+	\item Read access: nonlocal variable -- symbol stands for the variable in the higher scope
+	\item Write access: local variable -- symbol is a new object
+	\item Forbidden: operations that would change the memory address
+	\item[\Thus] No mixed read/write access!
+	\end{itemize}
 \end{itemize}
 %
 \end{frame}
@@ -787,28 +567,199 @@ on module level: data = 1
 
 \begin{frame}[fragile]
 %
-\begin{codebox}[Example: Local Variables]
-\begin{minted}[linenos, fontsize=\scriptsize]{python}
-globVar  = ["foo"]
-reDefVar = ["bar"]
+\begin{tcbraster}[raster columns=2,
+                  raster equal height,
+                  nobeforeafter,
+                  raster column skip=0.5cm]
+\begin{codebox}[Example: Nonlocal Variables (1)]
+\begin{minted}[fontsize=\scriptsize, linenos]{python3}
+def foo (param) :
+    localVar = -1
 
-def foobar() :
-    locVar = "confused cat"         # local definition
-    reDefVar = [42]                 # redefinition -- local variable
-    print(globVar, reDefVar)        # globVar: module level; reDefVar: local scope
-    globVar.append("foo bar")       # write access; adress doesn't change
-    #globVar = globVar + ["baz"]    ! error: would change address
+    print("In foo:")
+    print(" param      :", param)
+    print(" moduleLevel:", moduleLevel)
+    print(" localVar   :", localVar)
+    print()
 
-foobar()
+moduleLevel = 1
+localVar    = 1
 
-print(globVar, reDefVar)
-# print(locVar)                     ! error: 'locVar' is local to foobar
+foo(1)
+
+print("In module level:")
+print(" moduleLevel:", moduleLevel)
+print(" localVar   :", localVar)
 \end{minted}
 \end{codebox}
-\begin{cmdbox}[Output: Local Variables]
+%
+\begin{cmdbox}[Output: Nonlocal Variables (1)]
 \begin{minted}[fontsize=\scriptsize]{text}
-['foo'] [42]
-['foo', 'foo bar'] ['bar']
+In foo:
+ param      : 1
+ moduleLevel: 1
+ localVar   : -1
+
+In module level:
+ moduleLevel: 1
+ localVar   : 1
+\end{minted}
+\end{cmdbox}
+\end{tcbraster}
+%
+\Thus~Two different bindings for symbol \texttt{localVar}, depending on context\\
+\phantom{.}\qquad(in \texttt{foo} or in module level)
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]
+%
+\begin{tcbraster}[raster columns=2,
+                  raster equal height,
+                  nobeforeafter,
+                  raster column skip=0.5cm]
+\begin{warnbox}[Example: Nonlocal Variables (2), leftupper=7mm]
+\begin{minted}[fontsize=\scriptsize, linenos]{python3}
+def foo () :
+    print(moduleLevel)
+    
+    moduleLevel = -1
+
+moduleLevel = 1
+
+foo()
+
+print(moduleLevel)
+
+\end{minted}
+\end{warnbox}
+%
+\begin{cmdbox}[Output: Nonlocal Variables (2)]
+\begin{minted}[fontsize=\scriptsize]{text}
+Traceback (most recent call last):
+
+  File "/home/blue-chameleon/.config/
+        spyder-py3/temp.py", line 8, 
+        in <module>
+    foo()
+
+  File "/home/blue-chameleon/.config/
+        spyder-py3/temp.py", line 2,
+        in foo
+    print(moduleLevel)
+
+UnboundLocalError: local variable 
+    'moduleLevel' referenced before
+    assignment
+\end{minted}
+\end{cmdbox}
+\end{tcbraster}
+%
+\begin{itemize}
+\item Write access (line 4) makes \texttt{moduleLevel} a \emph{local} variable
+\item Undefined at first read access (line 2)
+\item[\Thus] Error message
+\end{itemize}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]{\inPy{global} Declaration}
+%
+\begin{itemize}
+\item To make the previous example work: Tell Python to bind \texttt{moduleLevel} to variable on module level
+\item New command: \inPy{global moduleLevel}
+\item Allows changes to module level
+\item (Don't you ever use it)
+\end{itemize}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]
+%
+\begin{tcbraster}[raster columns=2,
+                  raster equal height,
+                  nobeforeafter,
+                  raster column skip=0.5cm]
+\begin{codebox}[Example: Nonlocal Variables (3)]
+\begin{minted}[fontsize=\scriptsize, linenos]{python3}
+def foo () :
+    global moduleLevel
+    print("in foo, before change:",
+          moduleLevel)
+    
+    moduleLevel = -1
+
+moduleLevel = 1
+
+foo()
+
+print("in module level, after change:",
+      moduleLevel)
+\end{minted}
+\end{codebox}
+%
+\begin{cmdbox}[Output: Nonlocal Variables (3)]
+\begin{minted}[fontsize=\scriptsize]{text}
+in foo, before change: 1
+in module level, after change: -1
+\end{minted}
+\end{cmdbox}
+\end{tcbraster}
+%
+\begin{itemize}
+\item \inPy{global} declaration (line 2) binds both symbols ($\texttt{moduleLevel}_{\text{foo}}$ and $\texttt{moduleLevel}_{\text{main}}$) to the same descriptor
+\item Read- and write-access as if on module level!
+\end{itemize}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]{\inPy{nonlocal} Declaration}
+%
+\begin{itemize}
+\item Essentially the same for nested functions
+\item Make binding to one level higher, but not module level
+\item Surprisingly more useful than \inPy{global}
+\item (You likely won't need it very often, though)
+\end{itemize}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]
+%
+\begin{codebox}[Example: \texttt{nonlocal}]
+\begin{minted}[linenos, fontsize=\scriptsize]{python3}
+def doesSomethingComplicated () :
+    result = ""
+    
+    def someSubProblem () :
+        nonlocal result
+        initialState = len(result)
+        result += "A partially solved problem starting at " + str(initialState)
+    
+    someSubProblem()
+    print(result)
+    result = result.replace("partially", "completely")
+    return result
+
+print( doesSomethingComplicated() )
+\end{minted}
+\end{codebox}
+
+\vspace{-12pt}
+\begin{cmdbox}[Output: \texttt{nonlocal}]
+\begin{minted}[fontsize=\scriptsize]{text}
+A partially solved problem starting at 0
+A completely solved problem starting at 0
 \end{minted}
 \end{cmdbox}
 %
@@ -831,5 +782,57 @@ Adhering to the idea, I advise you to follow these rules:
 
 Otherwise, dependencies can become rather complicated, difficult to control and will be sources of errors. You need to be able to controll all data going into and out of your functions; this is hard if you can't see which data do go in. Essentially, you'd need to know the state of your \emph{entire programm, at all times}.
 \end{hintbox}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]
+%
+\vspace{-3pt}
+\begin{hintbox}[KISS: Keep It Simple{,} Stupid]
+\emph{A function should do one thing and one thing only.}
+
+\vspace{6pt}
+Write your functions such that they \emph{either} return a value \emph{or} print on screen.
+
+\vspace{6pt}
+If you want to solve multiple problems, write multiple functions. If one problem can be decomposed into $N$ subproblems, write $N+1$ functions:
+
+\begin{codebox}
+\begin{minted}[fontsize=\scriptsize]{python3}
+def subProblemA (...) :
+     ...
+   
+def subProblemB (...) :
+     ...
+   
+def fullProblem (...) :
+     subProblemA(...)
+     subProblemB(...) 
+\end{minted}
+\end{codebox}
+\end{hintbox}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}{Best Practice}
+%
+\begin{itemize}
+\item Forget about \inPy{global} and \inPy{nonlocal}
+\item Only input to functions: parameter list
+\item Only output from functions: \inPy{return} statement
+\item Updating a variable by a function: \inPy{variable = function(variable)}
+\item (Possible) exception: mutable variables like lists
+\item \inPy{updateFunction(myList)}
+\item Make sure the function name reflects this behaviour
+	\begin{itemize}
+	\item Good names: \texttt{updateXXX}, \texttt{appendThings}, \texttt{removeThings}, \texttt{clear}, ...
+	\item Okay, possibly ambiguous name: \texttt{filter} (updating behaviour not implicitly clear)
+	\item[\Thus] Function Names should be verbs!
+	\end{itemize}
+\end{itemize}
 %
 \end{frame}
