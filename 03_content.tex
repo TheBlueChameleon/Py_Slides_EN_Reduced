@@ -496,7 +496,7 @@ print(copiedList)
 		(braceArrayPreResize) {\scriptsize original data};
   \draw [decorate, decoration={brace,amplitude=7pt}, xshift=-0pt, yshift=0pt]
   		( 5.75, 0.5) -- ( 9.25, 0.5) node [midway, yshift=+0.5cm] 
-		(braceArrayPreResize) {\scriptsize \emph{ohter data}};
+		(braceArrayPreResize) {\scriptsize \emph{other data}};
 
   \node (a1) [below=2mm of v1, color=teal] {\tiny 0x2800};
   \node (a2) [below=2mm of v2]             {\tiny 0x2801};
@@ -773,6 +773,7 @@ print(L)
 \begin{minted}[fontsize=\scriptsize]{text}
 [1, 2, 3, 4, [5]]
 [1, 99, 2, 3, 4, [5]]
+[1, 2, 3, 4, [5]]
 \end{minted}
 \end{cmdbox}
 \end{columns}
@@ -782,7 +783,7 @@ print(L)
 
 % =========================================================================== %
 
-\begin{frame}[fragile]{Insertion: deleting entries}
+\begin{frame}[fragile]{Insertion: Deleting Entries}
 %
 \begin{hintbox}[Delete from index]
 You can use slicing to remove elements from a \inPy{list} given their \emph{position}. Construct two temporary list: one with all elements \emph{before} the element to delete, and one with all the elements thereafter. Both temporary lists can then be concatenated using the addition operator.
@@ -794,10 +795,10 @@ You can use slicing to remove elements from a \inPy{list} given their \emph{posi
                   raster column skip=0.5cm]
 \begin{codebox}[Example: remove third element]
 \begin{minted}[fontsize=\scriptsize]{python}
-X = ["I", "want", "no", "more"]
+L = ["I", "want", "no", "more"]
 toDelete = 2
-X = L[:toDelete] + L[toDelete + 1:]
-print(X)
+L = L[:toDelete] + L[toDelete + 1:]
+print(L)
 \end{minted}
 \end{codebox}
 %
@@ -821,6 +822,7 @@ print(X)
 \item \inPy{pop} -- remove and return last element (or element at given index)
 \end{itemize}
 %
+\vspace{3pt}
 \begin{tcbraster}[raster columns=2,
                   raster equal height,
                   nobeforeafter,
@@ -830,12 +832,11 @@ print(X)
 langs = ["C", "Python", "C++", "Java",
          "BASIC", "Assembly", "LaTeX",
          "bash", "gnuPlot", "makefile"]
-
 langs.sort()
-print(langs)
+print(langs, end='\n\n')
 
 langs.reverse()
-print(langs)
+print(langs, end='\n\n')
 
 print(langs.pop())
 print(langs)
@@ -847,9 +848,11 @@ print(langs)
 ['Assembly', 'BASIC', 'C', 'C++', 'Java', 
  'LaTeX', 'Python', 'bash', 'gnuPlot', 
  'makefile']
+ 
 ['makefile', 'gnuPlot', 'bash', 'Python',
  'LaTeX', 'Java', 'C++', 'C', 'BASIC',
  'Assembly']
+
 Assembly
 ['makefile', 'gnuPlot', 'bash', 'Python',
  'LaTeX', 'Java', 'C++', 'C', 'BASIC']

@@ -35,7 +35,6 @@
 \usepackage{lmodern}
 \usepackage{microtype}
 \usepackage{csquotes}
-\usepackage{xspace}
 
 \usepackage{tabularx}
 \usepackage{booktabs}
@@ -44,8 +43,17 @@
 \usepackage{color, colortbl}
 \usepackage{xcolor}
 	\definecolor{tabhighlight}{RGB}{230,240,255}
+	\definecolor{tabcontrast} {RGB}{200,210,255}
 
 \usepackage{tabto}
+\usepackage{xspace}
+
+% math
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{dsfont}
+\usepackage[arrowdel]{physics}
+\usepackage{mathtools}
 
 \usepackage{minted}
 	\usemintedstyle{friendly}
@@ -65,8 +73,7 @@
 		{colback=cyan!10!white,
 		 colframe=cyan!75!black,
 		 arc=0pt,
-		 outer arc=0pt,
-		 parbox=false
+		 outer arc=0pt
 		}
 	\newtcolorbox{codebox}[1][Code]
 		{colback=black!5!white,
@@ -113,20 +120,20 @@
 
 \newcommand*{\tabcrlf}{\\ \midrule}			% actually still allows for optional argument
 
-\newcommand*{\inPy}[1]{\mintinline{python}{#1}}
+\newcommand*{\inPy}[1]{\mintinline{python3}{#1}}
 
 % =========================================================================== %
 
 \author{Stefan Hartinger}
 \title{Programming in Python}
-\subtitle{Part 5: \texttt{while}-Loops}
+\subtitle{Part 8: Classes}
 \institute{University Regensburg, Department of Theoretical Physics}
 \date{Winter Term 2021/22}
 
 % =========================================================================== %
 
 \begin{document}
-\include{05_content}
+\include{08_content}
 \end{document}
 
 % MAREI!!

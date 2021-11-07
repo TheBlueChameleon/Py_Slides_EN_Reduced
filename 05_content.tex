@@ -65,7 +65,7 @@ for row in range(height) :
 \end{codebox}
 %
 \begin{codebox}[Example: Christmas{,} two loops]
-\begin{minted}[fontsize=\scriptsize, linenos]{python}
+\begin{minted}[fontsize=\scriptsize, linenos]{python3}
 height = 7
 
 for   row    in range(    height    ) :
@@ -79,7 +79,7 @@ for   row    in range(    height    ) :
 \end{tcbraster}
 %
 \begin{codebox}[Example: Christmas{,} one loop (\enquote{The Python Way} of writing code)]
-\begin{minted}[fontsize=\scriptsize, linenos]{python}
+\begin{minted}[fontsize=\scriptsize, linenos]{python3}
 height = 7
 for row in range(height) :
   print(" " * (height - row - 1), "*" * (2 * row + 1))
@@ -154,7 +154,7 @@ for row in range(height) :
 %
 %
 \begin{codebox}[Example: Count Characters]
-\begin{minted}[fontsize=\scriptsize, linenos]{python}
+\begin{minted}[fontsize=\scriptsize, linenos]{python3}
 text = "the quick brown fox jumps over the lazy dog"
 uniqueChars = set(text)
 sortedChars = sorted(uniqueChars)
@@ -209,7 +209,7 @@ for char in sortedChars :
 %
 \column{.5\linewidth}
 \begin{codebox}[Syntax: \texttt{while}]
-\begin{minted}[fontsize=\scriptsize]{python}
+\begin{minted}[fontsize=\scriptsize]{python3}
 while condition :
     statements
 \end{minted}
@@ -223,7 +223,7 @@ while condition :
 \begin{frame}[fragile]
 %
 \begin{codebox}[Example: Compound Interest (I)]
-\begin{minted}[linenos, fontsize=\scriptsize]{python}
+\begin{minted}[linenos, fontsize=\scriptsize]{python3}
 capital  = float(input("Please provide your seed capital:"))
 interest = float(input("Please provide the interest rate:"))
 limit    = float(input("Please provide the savings goal :"))
@@ -260,7 +260,7 @@ print("After", years, "years you've reached your savings goal.")
 
 \begin{frame}[fragile]
 \begin{codebox}[Beispiel: \texttt{break} with a single level]
-\begin{minted}[linenos, fontsize=\scriptsize]{python}
+\begin{minted}[linenos, fontsize=\scriptsize]{python3}
 count = 0
 value = 0
 
@@ -286,7 +286,7 @@ print("Total:", value)
 %
 \vspace{-6pt}
 \begin{codebox}[Example: \texttt{break} with multiple levels]
-\begin{minted}[linenos, fontsize=\scriptsize]{python}
+\begin{minted}[linenos, fontsize=\scriptsize]{python3}
 import random
 
 total = 0
@@ -321,7 +321,7 @@ print("total:", total)
 \end{itemize}
 %
 \begin{codebox}[Example: \texttt{continue}]
-\begin{minted}[linenos, fontsize=\scriptsize]{python}
+\begin{minted}[linenos, fontsize=\scriptsize]{python3}
 container = []
 while len(container) < 3 :
     value = int(input("Please provide an even number: "))
@@ -360,7 +360,7 @@ print("done.")
 \begin{frame}[fragile]
 %
 \begin{codebox}[Example: Compound Interest (II)]
-\begin{minted}[linenos, fontsize=\scriptsize]{python}
+\begin{minted}[linenos, fontsize=\scriptsize]{python3}
 capital  = float(input("Please provide your seed capital: "))
 interest = float(input("Please provide the interest rate: "))
 limit    = float(input("Please provide the savings goal : "))
@@ -389,7 +389,7 @@ print("DONE.")
 %
 \vspace{-5pt}
 \begin{codebox}[Example: \texttt{for} with \texttt{break}{,} \texttt{continue} and \texttt{else}]
-\begin{minted}[linenos, fontsize=\scriptsize]{python}
+\begin{minted}[linenos, fontsize=\scriptsize]{python3}
 tasks = [("hidden", "watch Fullmetal Alchemist"),
          ("open", "work very hard on Python"),
          ("open", "drink all the coffee")]
@@ -429,6 +429,199 @@ work was found in task ID 1
 	\item \emph{While the container is not exhausted, do ...}
 	\item Use an index variable (not recommended)
 	\item Internally, \inPy{for}-loops are handled that way
+	\end{itemize}
+\end{itemize}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}{Example Problem: GCD}
+%
+\begin{itemize}
+\item \emph{Greatest Common Divisor}
+\item Biggest number that divides two numbers without remainder
+\item[\Thus] Input: two \inPy{int}egers, \texttt{a, b}
+\item[\Thus] Output: one \inPy{int}eger, \texttt{gcd}
+\item Two approaches
+	\begin{itemize}
+	\item Brute Force
+	\item Euclids Algorithm
+\item Both use loops
+	\end{itemize}
+\end{itemize}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}{GCD: Brute Force Approach}
+%
+\begin{itemize}
+\item Brute Force: \enquote{Try all possibilities}
+\item All possibilities:
+	\begin{itemize}
+	\item Numbers from one ...
+	\item ... till smallest of \texttt{a, b}
+	\end{itemize}
+\item Intermediate step: collect all numbers that divide both, \texttt{a} and \texttt{b}
+	\begin{itemize}
+	\item[\Thus] Mutable container, \eg \inPy{list}
+	\end{itemize}
+\item Find biggest number
+	\begin{itemize}
+	\item \inPy{for}-loop
+	\item \inPy{max}
+	\end{itemize}
+\end{itemize}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]
+%
+\begin{codebox}[GCD: Brute Force{,} with \texttt{list}]
+\begin{minted}[linenos, fontsize=\scriptsize]{python3}
+candidates = []
+    
+for i in range( 1, min(a, b) + 1 ) :
+    if not (a % i) and not (b % i) :
+        candidates.append(i)
+
+gcd = max(candidates)
+\end{minted}
+\end{codebox}
+%
+\begin{codebox}[GCD: Brute Force{,} slightly optimized]
+\begin{minted}[linenos, fontsize=\scriptsize]{python3}
+gcd = 1
+    
+for i in range( 1, min(a, b) + 1 ) :
+    if not (a % i) and not (b % i) :
+        gcd = i
+\end{minted}
+\end{codebox}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}{GCD: Euclid's Algorithm}
+%
+\begin{columns}
+\column{.45\linewidth}
+\begin{itemize}
+\item Idea: \enquote{Dividing out} one factor does not change the GCD
+\item Remainder has to be divisible by GCD, too
+\item[\Thus] $\gcd(a, b) = \gcd(b, a \mod b)$ for $a > b$
+\item This rule applies \emph{recursively}
+\item[\Thus] Repeat until $a' | b'$
+\item[\Thus] Result is $b'$
+\end{itemize}
+%
+\column{.5\linewidth}
+\includegraphics[width=\linewidth]{./gfx/Euclid-GCD}
+\end{columns}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}{Euclid's Algorithm: Analysis}
+%
+\begin{columns}
+\column{.45\linewidth}
+\begin{itemize}
+\item Repeat steps \Thus Loop
+	\begin{itemize}
+	\item Find remainder
+	\item Check if remainder is zero
+	\item Update operands
+	\end{itemize}
+\item Termination condition
+	\begin{itemize}
+	\item Remainder is zero
+	\item Unknown number of iterations (not \inPy{for ... range})
+	\item No container to exhaust (not \inPy{for})
+	\item[\Thus] \inPy{while}
+	\item Result is smaller operand
+	\end{itemize}
+\end{itemize}
+%
+\column{.5\linewidth}
+\includegraphics[width=\linewidth]{./gfx/Euclid-GCD}
+\end{columns}
+%
+\begin{itemize}
+\item Ordering Problem
+	\begin{itemize}
+	\item Implicitly required: $a \geq b$
+	\item In fact not necessary due to property of modulus
+	\end{itemize}
+\end{itemize}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]
+%
+\begin{columns}
+\column{.45\linewidth}
+\begin{codebox}[GCD: Euclid's Algorithm]
+\begin{minted}[linenos, fontsize=\scriptsize]{python3}
+while b != 0:
+    temp = b
+    b = a % b
+    a = temp
+
+gcd = a
+\end{minted}
+\end{codebox}
+%
+\column{.48\linewidth}
+\begin{itemize}
+\item Updating operands requires temp copy
+	\begin{itemize}
+	\item Parallel update of \texttt{a} and \texttt{b}
+	\item Evades ordering Problem
+	\item Nifty Python Trick: hidden temp variable:
+		\mint{python3}{a, b = b, a % b}
+	\end{itemize}
+\end{itemize}
+\end{columns}
+%
+\begin{hintbox}[Length and Complexity]
+Isn't it amazing how much thought can go into a mere five lines of code?
+
+In this lies the \emph{art of coding}: Thinking through all possibilities and dealing with them without too much fuss
+\end{hintbox}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}{Algorithmic Elegance: Why Euclid Beats Brute Force}
+%
+\begin{itemize}
+\item Concept: Runtime
+	\begin{itemize}
+	\item Number of steps to complete a task
+	\item Complete mathematical theory
+	\item[\thus] Numerics (each winter term)
+	\item[\thus] Numerical Recipies (each winter term)
+	\item[\thus] Algorithms and Data Structures (each summer term)
+	\end{itemize}
+\item Brute Force Approach
+	\begin{itemize}
+	\item Always takes $\min(a, b)$ steps
+	\end{itemize}
+\item Euclid
+	\begin{itemize}
+	\item Best case: takes 1 step
+	\item Worst case: [difficult to compute; Wikipedia: $\propto \log(ab)$]
+	\item Almost all cases: less steps than $\min(a, b)$
 	\end{itemize}
 \end{itemize}
 %

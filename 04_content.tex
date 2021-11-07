@@ -73,7 +73,7 @@
 \begin{columns}[T]
 \column{.5\linewidth}
 \begin{itemize}
-\item We already know: texts in \texttt{'}single\texttt{'} or \texttt{''}double\texttt{''} quotes
+\item We already know: texts in \inPy{'single'} or \inPy{"double"} quotes
 \item Internally: \emph{immutable list of characters}
 \item Known techniques applicable:
 	\begin{itemize}
@@ -149,9 +149,10 @@ t = tuple("text")
 
 % =========================================================================== %
 
-\begin{frame}[fragile]{\inPy{set}s and \inPy{frozenset}s}
+\begin{frame}[fragile, t]{\inPy{set}s and \inPy{frozenset}s}
 %
-\begin{columns}[T]
+\vspace{-15pt}
+\begin{columns}[t]
 \column{.5\linewidth}
 \begin{itemize}
 \item \inPy{set}s
@@ -194,7 +195,8 @@ print(s)        #{'r', 'v', 'k', 'd', 'a'}
 
 \begin{frame}[fragile]{\inPy{range}s}
 %
-\begin{columns}[T]
+\vspace{-15pt}
+\begin{columns}[t]
 \column{.5\linewidth}
 \begin{itemize}
 \item Idea: low-memory-container for \inPy{int}egers
@@ -230,7 +232,8 @@ print(list(range(5, 0, -1)))
 
 \begin{frame}[fragile]{\inPy{dict}ionaries}
 %
-\begin{columns}[T]
+\vspace{-15pt}
+\begin{columns}[t]
 \column{.5\linewidth}
 \begin{itemize}
 \item \enquote{\inPy{list} with arbitrary \emph{keys} as indices}
@@ -296,6 +299,7 @@ d['north'] = 0
 	\item \inPy{[1, 5, 7] < [1, 5, 9, -3]} for the same reason.
 	\end{itemize}
 \item \inPy{zip} -- put lists \enquote{side by side}, create \texttt{tuple}s with elements from each container \\
+	\vspace{-5pt}
 	\begin{codebox}[example: \texttt{zip}]
 	\begin{minted}[linenos, fontsize=\scriptsize]{python}
 A = ["Gryffindor", "Ravenclaw", "Hufflepuff", "Slytherin"]
@@ -303,6 +307,7 @@ B = ["red", "blue", "yellow", "green"]
 print(list(zip(A, B)))
 	\end{minted}
 	\end{codebox}
+	\vspace{-10pt}
 	\begin{cmdbox}[Output: \texttt{zip}]
 	\begin{minted}[fontsize=\scriptsize]{text}
 [("Gryffindor", "red"), ("Ravenclaw", "blue"),
@@ -329,7 +334,8 @@ print(list(zip(A, B)))
 
 \begin{frame}[fragile]{\inPy{for}-Loops}
 %
-\begin{columns}[T]
+\vspace{-15pt}
+\begin{columns}[t]
 \column{.5\linewidth}
 \begin{itemize}
 \item Idea: do [actions] \emph{for each element} in a container
@@ -421,6 +427,30 @@ the first 10 square numbers are:
 
 \begin{frame}[fragile]
 %
+\begin{codebox}[Example: \texttt{for}-Loops with \texttt{tuple}s]
+\begin{minted}[fontsize=\scriptsize, linenos]{python}
+import math
+vectors = [(1, 1), (4, 7), (-1, 2)]
+for v in vectors :
+    print("vector", v, "has length", math.hypot(v[0], v[1]))
+\end{minted}
+\end{codebox}
+%
+\begin{cmdbox}[Output: \texttt{for}-Loops with \texttt{tuple}s]
+\begin{minted}[fontsize=\scriptsize]{text}
+vector (1, 1) has length 1.4142135623730951
+vector (4, 7) has length 8.06225774829855
+vector (-1, 2) has length 2.23606797749979
+\end{minted}
+\end{cmdbox}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]
+%
+\vspace{-5pt}
 \begin{codebox}[Example: \texttt{for}-Loops and unpacking of \texttt{tuple}s]
 \begin{minted}[fontsize=\scriptsize, linenos]{python}
 books = [("Frank Herbert", "Dune"),
@@ -435,6 +465,7 @@ for author, title in books :
 \end{minted}
 \end{codebox}
 %
+\vspace{-10pt}
 \begin{cmdbox}[Output: \texttt{for}-Loops and unpacking of \texttt{tuple}s]
 \begin{minted}[fontsize=\scriptsize]{text}
 You should definitively read:
@@ -444,29 +475,6 @@ You should definitively read:
 * Foundation by Isaac Asimov
 * Educating Rita by Willy Russell
 * Moving Pictures by Terry Pratchett
-\end{minted}
-\end{cmdbox}
-%
-\end{frame}
-
-% =========================================================================== %
-
-\begin{frame}[fragile]
-%
-\begin{codebox}[Example: \texttt{for}-Loops without unpacking of \texttt{tuple}s]
-\begin{minted}[fontsize=\scriptsize, linenos]{python}
-import math
-vectors = [(1, 1), (4, 7), (-1, 2)]
-for v in vectors :
-    print("vector", v, "has length", math.hypot(v[0], v[1]))
-\end{minted}
-\end{codebox}
-%
-\begin{cmdbox}[Output: \texttt{for}-Loops without unpacking of \texttt{tuple}s]
-\begin{minted}[fontsize=\scriptsize]{text}
-vector (1, 1) has length 1.4142135623730951
-vector (4, 7) has length 8.06225774829855
-vector (-1, 2) has length 2.23606797749979
 \end{minted}
 \end{cmdbox}
 %
@@ -522,7 +530,7 @@ Datapoint 2: (-4.1, -3.8) differs by : -0.2999999999999998
 \end{minted}
 \end{cmdbox}
 %
-\begin{hintbox}[\texttt{zip}]
+\begin{hintbox}[Remember: \texttt{zip}]
 The function \inPy{zip} generates \inPy{tuple}s from container-elements with same index.
 \end{hintbox}
 %
@@ -605,7 +613,7 @@ print(eValues)
 
 \begin{frame}[fragile]
 %
-\begin{codebox}[Example: Telefone-Matrix with List Comprehension]
+\begin{codebox}[Example: Telephone-Matrix with List Comprehension]
 \begin{minted}[fontsize=\scriptsize, linenos]{python}
 telephone = [[3 * row + column + 1 for column in range(3)]
              for row in range(3)
@@ -618,7 +626,7 @@ print(telephone)
 \end{minted}
 \end{codebox}
 %
-\begin{cmdbox}[Output: Telefone-Matrix with List Comprehension]
+\begin{cmdbox}[Output: Telephone-Matrix with List Comprehension]
 \begin{minted}[fontsize=\scriptsize]{text}
 [1, 2, 3]
 [4, 5, 6]
@@ -653,7 +661,7 @@ print(primeNumbers)
 \begin{cmdbox}[Output: Prime numbers with List Comprehension]
 \begin{minted}[fontsize=\scriptsize]{text}
 [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71,
-73, 79, 83, 89, 97]
+ 73, 79, 83, 89, 97]
 \end{minted}
 \end{cmdbox}
 %
