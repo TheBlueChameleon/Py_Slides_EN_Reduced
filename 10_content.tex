@@ -1,0 +1,820 @@
+% =========================================================================== %
+
+\begin{frame}[t,plain]
+\titlepage
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]{Recap}
+%
+\begin{columns}[T]
+\column{.5\linewidth}
+\begin{itemize}
+\item \inPy{__len__} and \inPy{__abs__}
+\item Comparison operators
+\item Computation operators
+	\begin{itemize}
+	\item Left- and right hand sided operators
+	\item Return value \inPy{NotImplemented}
+	\end{itemize}
+\item Index-Access
+\item Type safety
+\end{itemize}
+%
+\column{.5\linewidth}
+\begin{itemize}
+\item Design-Pattern: Shared methods
+\item Inheritance
+	\begin{itemize}
+	\item \enquote{Recyle} classes
+	\item Methods and attributes are copied
+	\item Everything can be overwritten
+	\item Calling Parent-Methods -- \inPy{super()}
+	\end{itemize}
+\end{itemize}
+
+\end{columns}
+%
+\begin{center}
+	\emph{Any Questions?}
+\end{center}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]{Chapter 8}
+%
+\begin{itemize}
+\item Representation in Binary and as Text
+\item Handles
+\item Reading and Writing Files
+\item Block struktures
+\item File Cursor Manipulation
+\item Pickle, JSON, CSV
+\end{itemize}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]{Representation in Binary and as Text}
+%
+\begin{columns}[T]
+\column{.5\linewidth}
+\begin{itemize}
+\item Recap: Humans use thousands of characters, computers use only two
+\item All information: for computers essentially binary numbers
+\item Rules for interpretation allow interfaces to humans
+\item[\Thus] Everything is a number
+\end{itemize}
+%
+\column{.5\linewidth}
+\begin{itemize}
+\item How to store (human) numbers: two principal approaches:
+\item \emph{Text} \inPy{"42"} is not equal to \emph{number} \inPy{42}
+	\begin{itemize}
+	\item Text: two characters: \inPy{"4"}, with ASCII-Code 52 and \inPy{"2"} with ASCII-Code 50\\
+		Bit pattern \texttt{00110110 00110100}
+	\item Number: Direct storage as binary number\\
+		Bit pattern \texttt{00101010}
+	\end{itemize}
+\end{itemize}
+\end{columns}
+%
+\begin{center}
+	\begin{large}
+	\Thus \emph{As Coders, we have to keep track of which kind of data we handle and give some context to the computer!}
+	\end{large}
+\end{center}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]{Opening Files -- Handles}
+%
+\vspace{-15pt}
+\begin{columns}[t]
+\column{.5\linewidth}
+\begin{itemize}
+\item Python does most of the interpretation work in the background through assigned data types (\inPy{int}, \inPy{float}, \inPy{dict}, \ldots)
+\item File content only holds \enquote{raw information}, without an assigned data type
+\item[\Thus] Our task
+\item Manipulate files via \emph{handles}
+\item Picture: \enquote{attach a handle to a file} with which you can \enquote{touch} the file
+\item File Mode -- like assigning a data type -- affects what we can do with the file
+\end{itemize}
+%
+\column{.5\linewidth}
+\begin{codebox}[Syntax: Opening Files]
+\begin{minted}[fontsize=\scriptsize]{python}
+handle = open(filename, mode)
+\end{minted}
+\end{codebox}
+%
+\begin{itemize}
+\item \texttt{filename} -- relative or absolute filename
+	\vspace{-12pt}
+	\begin{itemize}
+	\item \inPy{"myFile.txt"} -- try to find it in the current working directory (CWD)
+	\item \inPy{"C:/myFiles/myFile.txt"} -- absolute filename
+	\item \inPy{"../myFile.txt"} -- try to find it one level above the CWD
+	\end{itemize}
+\item Separator is a \emph{forward slash} (/), not the backslash (\textbackslash).
+\end{itemize}
+\end{columns}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]
+%
+\begin{hintbox}[Windows Users: Forward and Backward Slashes{,} non-escaped Strings]
+In the Windows world, it is common to use a backslash (\textbackslash) as a separator character. Python for Windows \enquote{understands} forward slashes, too. If, however, you want to use the Windows-Convention, remember that the backslash introduces an \emph{escape character} (\eg \texttt{\textbackslash n} -- line break). To avoid this, do ...
+
+\vspace{12pt}
+\begin{itemize}
+\item ... either escape the backslash (\textbackslash\textbackslash)
+\item ... or use the prefix \texttt{r}: \inPy{r"Text\with\numerous\backslashes"}\\
+	\thus \texttt{Text\textbackslash with\textbackslash numerous\textbackslash backslashes}
+\end{itemize}
+\end{hintbox}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]{File Modes}
+%
+\vspace{-12pt}
+\begin{center}
+\scriptsize
+\rowcolors{1}{white}{tabhighlight}
+\begin{tabular}{c|cp{.65\linewidth}}
+	\toprule
+	\textbf{String}	& \textbf{Meaning}         & \textbf{Comment} \tabcrlf
+	\texttt{r}		& Read   -- Text Mode      & File Cursor at the beginning of the file.\newline \emph{No} creation of new files.\\
+	\texttt{rb}		& Read   -- Binary Mode    & File Cursor at the beginning of the file.\newline \emph{No} creation of new files.\tabcrlf
+	\texttt{w}		& Write  -- Text Mode      & File Cursor at the beginning of the file.\newline Creation of new files, old files will be overwritten.\\
+	\texttt{wb}		& Write  -- Binary Mode    & File Cursor at the beginning of the file.\newline Creation of new files, old files will be overwritten.\tabcrlf
+	\texttt{x}		& Write  -- Text Mode      & File Cursor at the beginning of the file.\newline Creation of new files, old files will \emph{not} be overwritten.\\
+	\texttt{xb}		& Write  -- Binary Mode    & File Cursor at the beginning of the file.\newline Creation of new files, old files will \emph{not} be overwritten.\tabcrlf
+	\texttt{a}		& Append -- Text Mode      & File Cursor at the \emph{end} of the file. Creation of new files, old files will \emph{not} be overwritten.\\
+	\texttt{ab}		& Append -- Binary Mode    & File Cursor at the \emph{end} of the file. Creation of new files, old files will \emph{not} be overwritten. \\
+	\bottomrule
+\end{tabular}
+\end{center}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}
+%
+\begin{hintbox}[Binary or Text mode?]
+\small
+Is the file human-readable in a text editor?												\tabto{10.5cm} \Thus Text mode
+
+Are there only cryptic characters (\eg like when opeing pictures)?	\tabto{10.5cm} \Thus Binary mode
+\end{hintbox}
+%
+\begin{hintbox}[Which Access Mode?]
+\small
+Read?		\tabto{3cm} \Thus \texttt{r} or \texttt{rb}
+
+Create?	\tabto{3cm} \Thus \texttt{w} or \texttt{wb}
+
+Append?	\tabto{3cm} \Thus \texttt{a} or \texttt{ab}
+\end{hintbox}
+%
+\begin{hintbox}[Path Specifications -- Relative and Compact]
+\small
+Absolute Path Specifications: inflexible / not portable
+
+\vspace{6pt}
+If possible: design your programs such that all necessary files can be found in \emph{subfolders} of the project directory. Use paths relative to the CWD.
+\end{hintbox}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]{Closing Files}
+%
+\vspace{-12pt}
+\begin{columns}[t]
+\column{.4\linewidth}
+\begin{itemize}
+\item Handling Files: Fairly complicated processes
+	\begin{itemize}
+	\item Many media types: hard discs, CDs, network files, \ldots
+	\item Many file systems (NTFS, FAT, ext, hfs+, \ldots)
+	\end{itemize}
+\item Most work done by the operating system (OS)
+\item To work correctly, we have to tell the OS when an operation is completed
+\item[\Thus] Method \inPy{close()}
+\end{itemize}
+%
+\column{.6\linewidth}
+\vspace{-3pt}
+\begin{codebox}[Syntax: Closing Files]
+\begin{minted}[fontsize=\scriptsize]{python3}
+handle.close()
+\end{minted}
+\end{codebox}
+%
+\begin{itemize}
+\item If forgotten: Usually, Python interpreter closes files automatically \emph{eventually}
+\item Can result in a noticeable delay
+\end{itemize}
+%
+\begin{hintbox}[Write \texttt{open} and \texttt{close} in the same step]
+\small
+When typing \inPy{open}: Write the associated \texttt{close} directly thereafter. Only then, think of and write the code in between these commands.
+\end{hintbox}
+\end{columns}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]{Writing Files}
+%
+\begin{columns}[T]
+\column{.4\linewidth}
+\begin{itemize}
+\item As soon as we've opend a file in a write mode (\texttt{w}, \texttt{wb}, \texttt{a}, \ldots): method \texttt{write} can be used
+\item Takes either \inPy{str}ings (text mode) or \inPy{bytes} objects (binary mode) as an argument
+\item Argument is written into the file \enquote{as is}
+\item \emph{No} automatic line break
+\item Multiple write commands in sequence possible (no overwriting, regardless of mode)
+\end{itemize}
+%
+\column{.55\linewidth}
+\begin{codebox}[Example: Writing Two Lines into a File]
+\begin{minted}[fontsize=\scriptsize, linenos]{python}
+handle = open("output.txt", "w")
+
+handle.write("Some text " * 2 + "\n")
+handle.write( str([1, 2, 3]) )
+
+handle.close()
+\end{minted}
+\end{codebox}
+%
+\begin{cmdbox}[File Content of \texttt{output.txt}]
+\begin{minted}[fontsize=\scriptsize]{text}
+Some text Some text
+[1, 2, 3]
+\end{minted}
+\end{cmdbox}
+\end{columns}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]{Excursion: \inPy{bytes}-Object}
+%
+\begin{columns}[T]
+\column{.5\linewidth}
+\begin{itemize}
+\item Data Container, representing a section of memory
+\item Can be generated from many objects
+\item Can be cast into many data types
+	\begin{itemize}
+	\item To \inPy{int}: Directly, via method \inPy{int.from_bytes}
+	\item Additional information \enquote{Byte order}: Read left-to-right or right-to-left
+	\item \enquote{big endian} or \enquote{little endian}
+	\item To \inPy{float}: module \texttt{struct}
+	\end{itemize}
+\item Can be written in binary mode, puts memory content 1:1 into file
+\end{itemize}
+%
+\column{.5\linewidth}
+\vspace{-40pt}
+\begin{codebox}[Example: \texttt{bytes}]
+\begin{minted}[fontsize=\scriptsize, linenos]{python}
+data = [65, 66, 67, 68]
+bdata = bytes(data)
+print(bdata)
+print(int.from_bytes(bdata, 'big'))
+
+handle = open("output.dat", "wb")
+handle.write(bdata)
+handle.close()
+\end{minted}
+\end{codebox}
+%
+\begin{cmdbox}[Output on Screen]
+\begin{minted}[fontsize=\scriptsize]{text}
+b'ABCD'
+1094861636
+\end{minted}
+\end{cmdbox}
+%
+\begin{cmdbox}[File Content of \texttt{output.dat}]
+\begin{minted}[fontsize=\scriptsize]{text}
+ABCD
+\end{minted}
+\end{cmdbox}
+\end{columns}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]{Reading From Files}
+%
+\begin{columns}[T]
+\column{.5\linewidth}
+\vspace{-8pt}
+\begin{itemize}
+\item As soon as a file is opened in a read mode (\texttt{r} or \texttt{rb}): method \texttt{read} can be used
+\item One optional argument
+	\begin{itemize}
+	\item Maximum of characters (text mode) or bytes (binary mode) to be read
+	\item If omitted: reads entire file
+	\item If value bigger than file length: ignored
+	\item If value smaller than file length: \enquote{file cursor} moved to in front of the first unread character (byte)
+	\end{itemize}
+\item Attempting to read after end of file: raise exception
+\item Return value: \inPy{str}ing- or \inPy{bytes} variable
+\end{itemize}
+%
+\column{.5\linewidth}
+\vspace{-40pt}
+\begin{cmdbox}[File Content of \texttt{output.txt}]
+\begin{minted}[fontsize=\scriptsize]{text}
+Some text Some text
+[1, 2, 3]
+\end{minted}
+\end{cmdbox}
+%
+\begin{codebox}[Example: Reading Text Files]
+\begin{minted}[fontsize=\scriptsize, linenos]{python}
+handle = open("output.txt", "r")
+firstWord = handle.read(4)
+rest = handle.read()
+handle.close()
+print(firstWord)
+print(rest)
+\end{minted}
+\end{codebox}
+%
+\begin{cmdbox}[Output on Screen]
+\begin{minted}[fontsize=\scriptsize]{text}
+Some
+ text Some text
+[1, 2, 3]
+\end{minted}
+\end{cmdbox}
+%
+\end{columns}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]{\texttt{readline} and \texttt{readlines}}
+%
+\begin{columns}[T]
+\column{.5\linewidth}
+\begin{itemize}
+\item \texttt{readline}
+	\begin{itemize}
+	\item Method to file handles in text read mode
+	\item Reads an entire line
+	\item Optional argument: maximum length
+	\item Line break is included in the read content (unless prohibited by length restriction)
+	\end{itemize}
+\item \texttt{readlines}
+	\begin{itemize}
+	\item Method to file handles in text read mode
+	\item Reads \emph{all} lines, store them as a \inPy{list}
+	\item Optional argument: maximum line count
+	\item Line breaks is included int the read content
+	\end{itemize}
+\end{itemize}
+%
+\column{.5\linewidth}
+\vspace{-10pt}
+\begin{codebox}[Beispiel: \texttt{readline} and \texttt{readlines}]
+\begin{minted}[fontsize=\scriptsize]{python}
+handle = open("output.txt", "r")
+print( handle.readline(), end="" )
+print( handle.readline(), end="" )
+handle.close()
+
+handle = open("output.txt", "r")
+data = handle.readlines()
+print(data)
+handle.close()
+\end{minted}
+\end{codebox}
+%
+\begin{cmdbox}[Output on Screen]
+\begin{minted}[fontsize=\scriptsize]{text}
+Some text Some text
+[1, 2, 3]
+['Some text Some text\n', '[1, 2, 3]\n']
+\end{minted}
+\end{cmdbox}
+%
+\end{columns}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]{Block structure: \inPy{with .. as}}
+%
+\begin{itemize}
+\item Close Files automatically
+\item Generally recommended to use
+\item Sometimes not possible due to complex program structure
+\item Realized via dunders:
+	\begin{itemize}
+	\item \inPy{with} calls \inPy{__enter__} which returns \inPy{self} (\ie \texttt{handle})
+	\item End of \inPy{with} block calls \inPy{__exit__} which invokes \inPy{self.close()}
+	\end{itemize}
+\end{itemize}
+
+\vspace{12pt}
+\begin{tcbraster}[raster columns=2,
+                  raster equal height,
+                  nobeforeafter,
+                  raster column skip=0.3cm]
+\begin{codebox}[Syntax: \texttt{with .. as}]
+\begin{minted}[fontsize=\scriptsize]{python}
+with open(filename, mode) as handle :
+    statements
+
+# NO handle.close()
+\end{minted}
+\end{codebox}
+%
+\begin{codebox}[Example: compact read code]
+\begin{minted}[fontsize=\scriptsize, linenos]{python}
+with open("output.txt", "r") as handle :
+    data = handle.readlines()
+    
+print(data)
+\end{minted}
+\end{codebox}
+\end{tcbraster}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]{Block Strukture: File Handles with \inPy{for} and \inPy{list}}
+%
+\begin{columns}[t]
+\column{.5\linewidth}
+\begin{itemize}
+\item File Handles are \emph{Iterables}
+\item Can be looped over with \inPy{for}: read line by line
+\item Can be stored as a \inPy{list} 
+\item Hidden access to method \texttt{readlines}
+\item Probably most often used code structure when reading files
+\end{itemize}
+%
+\column{.5\linewidth}
+\begin{codebox}[Example: Three Equivalent Calls]
+\begin{minted}[fontsize=\scriptsize, linenos]{python}
+with open("output.txt", "r") as handle :
+    for line in handle.readlines() :
+        print(line)
+
+with open("output.txt", "r") as handle :
+    for line in handle :
+        print(line)
+
+with open("output.txt", "r") as handle :
+    lines = list(handle) # stays in mem
+for line in lines :
+    print(line)
+\end{minted}
+\end{codebox}
+%
+\end{columns}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]{File Cursor: \inPy{tell} and \inPy{seek}}
+%
+\begin{columns}[T]
+\column{.5\linewidth}
+\begin{itemize}
+\item Both: Methods of file handles
+\item	\texttt{tell}
+	\begin{itemize}
+	\item Returns current cursor position
+	\item Distance from start of file in bytes
+	\end{itemize}
+\item \texttt{seek}
+	\begin{itemize}
+	\item Change to cursor position (aka \emph{offset})
+	\item Offset: Number of Byte-Steps
+	\item Parameter 1: How many steps
+	\item Parameter 2: Which starting point
+		\begin{itemize}
+		\item 0: start of file
+		\item 1: current position
+		\item 2: end of file
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
+%
+\column{.5\linewidth}
+\begin{codebox}[Beispiel: \texttt{seek} und \texttt{tell}]
+\begin{minted}[fontsize=\scriptsize, linenos]{python}
+with open("output.txt", "r") as handle :
+    text = handle.read(4)
+    print( handle.tell() )
+        # Output: 4
+    
+    handle.seek(-2, 1)
+        # Step back two characters
+    print( handle.tell() )
+        # Output: 2
+    
+    handle.seek(0, 2)
+        # Jump to end of file
+\end{minted}
+\end{codebox}
+%
+\end{columns}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]{Pickle -- Serialization of Python Data Objects}
+%
+\begin{itemize}
+\item Some Computations take very long
+\item (Partial) results may be reusable later, or: split computation in multiple steps
+\item Pickle: module for \emph{serialization} of data objects, \ie bring into a form that can be stored to a file or sent over networks
+\item Format particular to Python; hardly compatible with other languages
+\item But can be used with (almost) anything in Python
+\item Requires \inPy{import pickle}
+\item Read or write in \emph{binary mode}
+\item Write: \inPy{pickle.dump(object, handle)}
+\item Read: \inPy{object = pickle.load(handle)}
+\end{itemize}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]
+%
+\vspace{-5pt}
+\begin{codebox}[Example: Pickle -- Read and Write]
+\begin{minted}[linenos, fontsize=\scriptsize]{python3}
+import pickle
+
+class Foo :
+    def __init__(self) :
+        self.bar = 1 + 1j
+    def __str__(self) :
+        return "Foo object"
+
+complexNumber = -0.3 + 4.1j
+classObject   = Foo()
+
+with open("archive.pkl", "wb") as handle :
+    pickle.dump(complexNumber, handle)
+    pickle.dump(classObject  , handle)
+with open("archive.pkl", "rb") as handle :
+    readComplex     = pickle.load(handle)
+    readClassObject = pickle.load(handle)
+
+print(readComplex)
+print(readClassObject, readClassObject.bar)
+\end{minted}
+\end{codebox}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}
+%
+\begin{columns}[T]
+\column{.65\linewidth}
+\begin{warnbox}[Security Issue Pickle]
+Pickle can serialize \emph{anything} -- even functions or entire modules. This can be useful, but allows to hide harmful code in an archive. Since code is often executed automatically in Python, an archive can be devised that runs harmful code \emph{as soon as it's unpickled}.
+
+\vspace{6pt}
+From the file itself it is hardly possible to see what is loaded (binary files).
+
+\vspace{6pt}
+Only load pickles that you really trust!
+\end{warnbox}
+%
+\column{.35\linewidth}
+\begin{center}
+\includegraphics[width=.6\linewidth]{./gfx/pickleRick}\\
+\scriptsize Source: \url{https://www.emp.de/p/the-adventures-of-pickle-rick/470242.html}
+\end{center}
+\end{columns}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]{JSON -- Portable Archives}
+%
+\begin{itemize}
+\item \emph{JavaScript Object Notation}
+\item Alternative approach to Pickle, same goal
+\item Data is stored as human-readable text
+\item Only supports 8 data types (as well as compositions thereof): 
+	\inPy{int}, \inPy{float}, \inPy{str}, \inPy{bool}, \inPy{list}, \inPy{tuple}, \inPy{dict}, \inPy{None}
+\item Other data types: deconstruct manually
+\item Well compatible with other languages
+\item Code logic as with Pickle:
+	\begin{itemize}
+	\item \inPy{import json}
+	\item Open in \emph{Text}mode
+	\item Write: \inPy{json.dump(object, handle)}
+	\item Read: \inPy{object = json.load(handle)}
+	\item Compile multiple objects into a \inPy{dict}
+	\end{itemize}
+\end{itemize}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]
+%
+\vspace{-3pt}
+\begin{codebox}[Example: JSON -- Read and Write]
+\begin{minted}[linenos, fontsize=\scriptsize]{python}
+import json
+
+complexNumber = -0.3 + 4.1j
+realPart      = complexNumber.real
+imaginaryPart = complexNumber.imag
+dictionary  = {1 : "one", 2 : "two", 3 : "three", 4 : ["list", "of", "strings"]}
+
+with open("archive.json", "w") as handle :
+    json.dump(
+        {"real" : realPart,
+         "imag" : imaginaryPart,
+         "dict" : dictionary},
+        handle
+    )
+with open("archive.json", "r") as handle :
+    jsonObjects = json.load(handle)
+readComplex = complex(jsonObjects["real"], jsonObjects["imag"])
+
+print(readComplex)
+print(jsonObjects["dict"])
+\end{minted}
+\end{codebox}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]{CSV -- Read and Write Tables}
+%
+\begin{itemize}
+\item \emph{Comma Separated Values}. Supported by many spreadsheet programs (such as Microsoft Excel or LibreOffice Calc)
+\item \inPy{str}ings, \inPy{int}s and \inPy{float}s in rows and columns
+\item Columns separated by some separator character, usually a comma (hence the name CSV)
+\item Possible to use with arbitrary separator characters (\eg whitespaces, tabulators, semicolons, vertical bars, ...)
+\item Double separator character \Thus empty cell
+\item \inPy{str}ings usually in \emph{string delimiters}, most often  \texttt{"}double quotes\texttt{"}
+\end{itemize}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]{CSV -- Read and Write Tables}
+%
+\begin{itemize}
+\item Requires \inPy{import csv}
+\item \texttt{csv.reader}: Class that \emph{parses} a CSV file with a given set of rules
+\item Arguments:
+	\begin{itemize}
+	\item \texttt{handle} -- handle to a file opened in text read mode (\inPy{"r"})
+	\item Optionally: \texttt{delimiter} -- column delimiter (default: \inPy{","})
+	\item Optionally: \texttt{quotechar} -- string delimiter (default: \inPy{None})
+	\end{itemize}
+\item \texttt{csv.reader} can be iterated over with \inPy{for}
+	\begin{itemize}
+	\item Loop variables are \inPy{list}s of strings, representing a line in the table
+	\item Skip any line with \inPy{content = next(readerObject)}
+	\end{itemize}
+\item More Details: \url{https://docs.python.org/3/library/csv.html}
+\end{itemize}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]
+%
+\begin{tcbraster}[raster columns=2,
+                  raster equal height,
+                  nobeforeafter,
+                  raster column skip=0.2cm]
+\begin{cmdbox}[File to Read]
+\begin{minted}[fontsize=\scriptsize, obeytabs, tabsize=14]{text}
+#time in s	voltage in V
+0	0
+1	0.1
+2	1.6
+3	2.9
+4	10.1
+5	11.5
+6	9.8
+7	3.1
+8	0.2
+9	0
+\end{minted}
+\end{cmdbox}
+%
+\begin{codebox}[Example: Read Data]
+\begin{minted}[fontsize=\scriptsize, linenos]{python}
+import csv
+
+with open("tab.txt", "r") as handle :
+   reader = csv.reader(
+      handle,
+      delimiter='\t'
+   )
+   first = next(reader)
+   print(*first, sep='\t')
+   for row in reader :
+      print("{}\t\t{:>4}".format(*row))
+\end{minted}
+\end{codebox}
+\end{tcbraster}
+%
+\begin{cmdbox}[Output on Screen]
+\begin{minted}[fontsize=\scriptsize, obeytabs, tabsize=14]{text}
+#time in s      voltage in V
+0                  0
+1                0.1
+2                1.6
+...
+\end{minted}
+\end{cmdbox}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]{Pickle, JSON, CSV -- When To Use What?}
+%
+\begin{tcbraster}[raster columns=3,
+                  raster equal height,
+                  nobeforeafter,
+                  raster column skip=0.2cm]
+\begin{tcolorbox}[title=Pickle]
+
+\vspace{-1pt}
+\begin{itemize}
+\item Very complex objects
+\item Pure Python Projects
+\item No intent to pass results to others
+\item Human-readable results not necessary
+\end{itemize}
+\end{tcolorbox}
+%
+\begin{tcolorbox}[title=JSON]
+
+\vspace{-1pt}
+\begin{itemize}
+\item Medium complexity of data objects
+\item No specific order to the data
+\item Human readability necessary
+\item Exchange with other prorammes or humans
+\end{itemize}
+\end{tcolorbox}
+%
+\begin{tcolorbox}[title=CSV]
+
+\vspace{-1pt}
+\begin{itemize}
+\item Tabular structure
+\item Very simple data types in rows and columns
+\item Exchange with other programs, in particular spreadsheet programs
+\end{itemize}
+\end{tcolorbox}
+\end{tcbraster}
+%
+\end{frame}

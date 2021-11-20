@@ -1,0 +1,777 @@
+% =========================================================================== %
+
+\begin{frame}[t,plain]
+\titlepage
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}{Recap}
+%
+\begin{columns}[T]
+\column{.5\linewidth}
+\begin{itemize}
+\item File access via handles
+	\begin{itemize}
+	\item \inPy{handle = open(filename, mode)}
+	\item pre-built objects
+	\item file mode: read/write/append, binary/text mode
+	\item should be closed after operation
+	\end{itemize}
+\item Writing to files
+	\begin{itemize}
+	\item With \texttt{handle.write}
+	\item Argument: \inPy{str}ing in text mode, \inPy{bytes} object in binary mode
+	\end{itemize}
+\end{itemize}
+%
+\column{.5\linewidth}
+\begin{itemize}
+\item Reading from files
+	\begin{itemize}
+	\item \texttt{handle.read} -- read as \inPy{str}ing or as \inPy{bytes} object
+	\item Entire file or up to a maximum length
+	\item \texttt{readline} and \texttt{readlines} -- read entire line(s)
+	\end{itemize}
+\item Block structures
+	\begin{itemize}
+	\item \inPy{with open(...) as handle} -- automatically close files
+	\item \inPy{for line in handle}
+	\end{itemize}
+\end{itemize}
+\end{columns}
+%
+\begin{center}
+	\emph{Any Questions?}
+\end{center}
+%
+\end{frame}
+% =========================================================================== %
+
+\begin{frame}[fragile]{Mind-Pictures: Classes as Professions}
+%
+\begin{itemize}
+\item Class instance: \enquote{Person, holding some specific knowledge}
+	\begin{itemize}
+	\item Pure knowledge \thus instance attributes
+	\item Expert of their subject, can interpret these attributes \thus methods
+	\end{itemize}
+\item Designing a class: \enquote{describing the profession}
+	\begin{itemize}
+	\item What do all people of that profession know? \thus instance and class attributes
+	\item What questions can they answer? \thus methods
+	\item How can they alter their \enquote{knowledge}? \thus methods, too
+	\end{itemize}
+\item Interaction between classes
+	\begin{itemize}
+	\item Picture: conversation
+	\item One person (instance) will take the lead, asks the other one questions
+	\item Ask questions \thus call methods
+	\item For that we need to know:
+		\begin{itemize}
+		\item Whom to ask \thus instance of the other class
+		\item Which question \thus which method
+		\item Possibly: How to specify the question \thus arguments to the method
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}{Mind-Pictures: Classes as Professions}
+%
+\begin{itemize}
+\item Example: \emph{Where, in a given garden, is it a good idea to plant a tree?}
+\item For this: two \enquote{experts}
+	\begin{itemize}
+	\item Gardener: knows how to recognize a good spot
+	\item Owner of the garden: knows the shape of their garde
+	\end{itemize}
+\item Possible: two approaches
+	\begin{itemize}
+	\item Responsibility with gardener
+		\begin{itemize}
+		\item Asks question: which spots are there? Decides on a good spot based on this reply
+		\end{itemize}
+	\item Responsibility with owner
+		\begin{itemize}
+		\item Asks if a chosen spot is a good spot
+		\end{itemize}
+	\end{itemize}
+\item (Third approach: gardener and owner are the same person)
+	\begin{itemize}
+	\item Less complex mechanics for \emph{simple} examples
+	\item Big projects: danger to loose track
+	\item \enquote{A class is responsible for \emph{one} concept.}
+	\end{itemize}
+\end{itemize}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]
+%
+\begin{tcbraster}[raster columns=2,
+                  raster equal height,
+                  nobeforeafter,
+                  raster column skip=0.5cm]
+\begin{codebox}[Example: Respons. w. Gardener]
+\begin{minted}[fontsize=\scriptsize, linenos]{python}
+import random
+
+class Owner :
+  def __init__ (self) :
+    self._spots = [1, 2, 3, 4, 5]
+  
+  def getSpots (self) :
+    return self._spots
+
+class Gardener :
+  def getGoodSpot(self, whomToAsk) :
+    answer = []
+    for spot in whomToAsk.getSpots() :
+      answer.append(spot)
+    return random.choice(answer)
+
+g = Gardener()
+o = Owner()
+
+print( g.getGoodSpot(o) )
+\end{minted}
+\end{codebox}
+%
+\begin{codebox}[Example: Responsibilty with Owner]
+\begin{minted}[fontsize=\scriptsize, linenos]{python}
+import random
+
+class Gardener :
+  def isSpotGood(self, spot) :
+    return random.choice([True, False])
+
+class Owner :
+  def __init__(self) :
+    self._spots = [1, 2, 3, 4, 5]
+  
+  def getGoodSpot(self, whomToAsk) :
+    goodSpots = []
+    for spot in self._spots :
+      if whomToAsk.isSpotGood(spot) :
+        goodSpots.append(spot)
+    return random.choice(goodSpots)
+    
+g = Gardener()
+o = Owner()
+
+print( o.getGoodSpot(g) )
+\end{minted}
+\end{codebox}
+\end{tcbraster}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}
+%
+\begin{hintbox}[Whom to give the responsibilty?]
+Both approaches make sense. Which one is better depends on the form of the project as a whole. Some thoughts that go into the decision:
+
+\vspace{6pt}
+\begin{itemize}
+\item Which approach minimized the number of function calls (\thus efficiency)
+\item Which object will be used mostly by the end-user (\thus user interface)
+\item Which object already controls most of the required data/methods \\
+	(\thus hierarchy)
+\end{itemize}
+
+\vspace{6pt}
+These questions can lead to contradictory results; there isn't always one ulitimative answer.
+
+\vspace{6pt}
+Whichever way you decide to follow: stay consistent!
+\end{hintbox}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]{Chapter 9}
+%
+\begin{itemize}
+\item \inPy{try..except} blocks
+\item Multipartite \inPy{except} blocks
+\item \inPy{else} and \inPy{finally}
+\item \inPy{raise} -- causing exceptions
+\item Creating own exception classes
+\end{itemize}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]{\inPy{try..except} Blocks -- Basics}
+%
+\begin{columns}[T]
+\column{.5\linewidth}
+\begin{itemize}
+\item Sometimes easier to \emph{react} to errors than to catch them before they happen
+\item Code structure:
+	\begin{itemize}
+	\item \inPy{try}: anything that could go wrong
+	\item \inPy{except}: what to do when something has gone wrong
+	\end{itemize}
+\item Discern \emph{error classes}, aka \emph{exceptions}
+\item After treatment of this exception: program continues normally \emph{after} the block
+\end{itemize}
+%
+\column{.5\linewidth}
+\vspace{-6pt}
+\begin{codebox}[Syntax: \texttt{try..except} Block]
+\begin{minted}[fontsize=\scriptsize]{python}
+try :
+    Code that could raise an exception
+except ErrorClass as varible :
+    Code for error treatment
+\end{minted}
+\end{codebox}
+\end{columns}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]
+%
+\begin{tcbraster}[raster columns=2,
+                  raster equal height,
+                  nobeforeafter,
+                  raster column skip=0.2cm]
+\begin{codebox}[Ex.: Code w. Error Treatment (1)]
+\begin{minted}[linenos, fontsize=\scriptsize]{python}
+import math
+
+for x in range(-3, 4) :
+  try :
+    print(f"{1/x:+5.2f}  ",
+          f"{math.log(abs(x-2)):+5.2f}")
+  except ZeroDivisionError as e :
+    print("Error:", e)
+\end{minted}
+\end{codebox}
+%
+\begin{cmdbox}[Out.: Code w. Error Treatment (1)]
+\begin{minted}[fontsize=\scriptsize]{text}
+-0.33   +1.61
+-0.50   +1.39
+-1.00   +1.10
+Error: division by zero
++1.00   +0.00
+Traceback (most recent call last):
+  File "<stdin>", line 4, in <module>
+ValueError: math domain error
+\end{minted}
+\end{cmdbox}
+\end{tcbraster}
+%
+\begin{center}
+\begin{itemize}
+\item[\Thus] Execution \emph{jumps} upon encountering an exception into the \inPy{except} block.
+\item[\Thus] Thereafter: code continues normally
+\item[\Thus] Only specified error classes are caught
+	\begin{itemize}
+	\item[\thus] Here: \inPy{ZeroDivisionError}
+	\end{itemize}
+\item[\Thus] Untreated errors (here: \inPy{ValueError}) still lead to aborting execution
+\item[\Thus] Variable \texttt{e} holds \enquote{Description of the error}
+	\begin{itemize}
+	\item[\thus] Instance of \inPy{ZeroDivisionError}
+	\end{itemize}
+\end{itemize}
+\end{center}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]
+%
+\begin{tcbraster}[raster columns=2,
+                  raster equal height,
+                  nobeforeafter,
+                  raster column skip=0.2cm]
+\begin{codebox}[Ex.: Code w. Error Treatment (2)]
+\begin{minted}[linenos, fontsize=\scriptsize]{python}
+try :
+    for x in range(-3, 4) :
+        print(f"{1/x:+5.2}")
+except ZeroDivisionError as e :
+    print("Error:", e)
+
+print("Done.")
+\end{minted}
+\end{codebox}
+%
+\begin{cmdbox}[Out.: Code w. Error Treatment (2)]
+\begin{minted}[fontsize=\scriptsize]{text}
+-0.33
+-0.50
+-1.00
+Error: division by zero
+Done.
+\end{minted}
+\end{cmdbox}
+\end{tcbraster}
+%
+\begin{center}
+\begin{itemize}
+\item[\Thus] \emph{Entire} \inPy{try} block is left after the first exception; continuation of code \emph{after} the \inPy{try..except} block
+\item[\Thus] Hierarchical ordering of \inPy{try} and other structures is important!
+\end{itemize}
+\end{center}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]{\inPy{tuple}s of Error Classes in a \inPy{except} Block}
+%
+\begin{columns}[T]
+\column{.5\linewidth}
+\begin{itemize}
+\item In one \inPy{try} block there can be multiple things going wrong
+\item Simple case: React to all errors in the same way
+\item If so: list error classes as a \inPy{tuple}
+\item[\Thus] If \emph{any} of the error classes meets the exception, treatment is triggered
+\end{itemize}
+%
+\column{.5\linewidth}
+\vspace{-6pt}
+\begin{codebox}[Syntax: \texttt{try..except} Block]
+\begin{minted}[fontsize=\scriptsize]{python}
+try :
+    Code that might cause an exception
+except (class1, class2, ..) as varible :
+    Code for treatment
+\end{minted}
+\end{codebox}
+\end{columns}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]
+%
+\begin{tcbraster}[raster columns=2,
+                  raster equal height,
+                  nobeforeafter,
+                  raster column skip=0.2cm]
+\begin{codebox}[Ex.: Code w. Error Treatment (3)]
+\begin{minted}[linenos, fontsize=\scriptsize]{python}
+import math
+
+for x in range(-3, 4) :
+  try :
+    print(f"{1/x:+5.2f}  ",
+          f"{math.log(abs(x-2)):+5.2f}"
+    )
+
+  except (ZeroDivisionError, 
+          ValueError) as e :
+    print("Error:", e)
+\end{minted}
+\end{codebox}
+%
+\begin{cmdbox}[Out.: Code w. Error Treatment (3)]
+\begin{minted}[fontsize=\scriptsize]{text}
+-0.33   +1.61
+-0.50   +1.39
+-1.00   +1.10
+Error: division by zero
++1.00   +0.00
+Error: math domain error
++0.33   +0.00
+\end{minted}
+\end{cmdbox}
+\end{tcbraster}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]{Multipartite \inPy{except} Blocks}
+%
+\begin{columns}[T]
+\column{.5\linewidth}
+\begin{itemize}
+\item Sometimes necessary: treat different errors differently
+	\begin{itemize}
+	\item Invalid entry in a file? Skip
+	\item File not found? Ask for alternative name
+	\end{itemize}
+\item Solution: Multiple \inPy{except} blocks
+\end{itemize}
+%
+\column{.5\linewidth}
+\vspace{-6pt}
+\begin{codebox}[Syntax: \texttt{try..except}-Block]
+\begin{minted}[fontsize=\scriptsize]{python}
+try :
+    Code that may raise an exception
+except Class1 as varible :
+    Code for treatment of Class1
+except Class2 as varible :
+    Code for treatment of Class2
+except ...
+\end{minted}
+\end{codebox}
+\end{columns}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]{Hierarchical Order of Error Classes}
+%
+\begin{itemize}
+\item Error Classes have hierarchical order: parent classes and derived classes
+\item \enquote{X belongs to Y}
+\item Example: \inPy{ZeroDivisionError} is an \inPy{ArithmeticError}, too
+\item But: \inPy{ArithmeticError} is not necessarily a \inPy{ZeroDivisionError}
+\item[\Thus] \inPy{except ArithmeticError} catches a \inPy{ZeroDivisionError}, but not vice versa
+\item \eg \inPy{ArithmeticError} also covers \inPy{OverflowError}
+\item See lecture notes or \url{https://docs.python.org/3/library/exceptions.html} for a list of pre-defined error classes
+\item \inPy{Exception} covers (almost) \emph{all} possible errors
+\end{itemize}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]
+%
+\begin{tcbraster}[raster columns=2,
+                  raster equal height,
+                  nobeforeafter,
+                  raster column skip=0.5cm]
+\begin{codebox}[Example: Multiple Error Classes A]
+\begin{minted}[linenos, fontsize=\scriptsize]{python}
+try :
+    print(1/0)
+    
+except ZeroDivisionError as e :
+    print("ZeroDivisionError")
+    
+except ArithmeticError as e :
+    print("ArithmeticError")
+\end{minted}
+\end{codebox}
+%
+\begin{codebox}[Example: Multiple Error Classes B]
+\begin{minted}[linenos, fontsize=\scriptsize]{python}
+try :
+    print(1/0)
+    
+except ArithmeticError as e :
+    print("ArithmeticError")
+    
+except ZeroDivisionError as e :
+    print("ZeroDivisionError")
+\end{minted}
+\end{codebox}
+\end{tcbraster}
+%
+\begin{tcbraster}[raster columns=2,
+                  raster equal height,
+                  nobeforeafter,
+                  raster column skip=0.5cm]
+\begin{cmdbox}[Output: Multiple Error Classes A]
+\begin{minted}[fontsize=\scriptsize]{text}
+ZeroDivisionError
+\end{minted}
+\end{cmdbox}
+%
+\begin{cmdbox}[Output: Multiple Error Classes B]
+\begin{minted}[fontsize=\scriptsize]{text}
+ArithmeticError
+\end{minted}
+\end{cmdbox}
+\end{tcbraster}
+%
+\begin{itemize}
+\item[\Thus] Only the first matching block is executed
+\item[\Thus] Other \inPy{except} blocks -- even if matching the error -- are ignored
+\item[\Thus] Same behaviour as \inPy{if .. elif}
+\end{itemize}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]{\inPy{else} and \inPy{finally} with \inPy{try..except} Blocks}
+%
+\begin{columns}[T]
+\column{.5\linewidth}
+\begin{itemize}
+\item \inPy{else}: execute if \emph{no error} has occured
+\item \enquote{On success of the \inPy{try} block, do ...}
+\end{itemize}
+%
+\column{.5\linewidth}
+\begin{itemize}
+\item \inPy{finally}: Execution in any case
+\item Even if there is a non-treated error
+\item \enquote{Safe Shutdown}
+\item Also executed after an \inPy{else} block (if present)
+\end{itemize}
+\end{columns}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]
+%
+\begin{tcbraster}[raster columns=2,
+                  raster equal height,
+                  nobeforeafter,
+                  raster column skip=0.5cm]
+\begin{codebox}[Example: All Clauses]
+\begin{minted}[linenos, fontsize=\scriptsize]{python}
+def divide(x, y):
+    try:
+        result = x / y
+    except ZeroDivisionError:
+        print("division by zero!")
+    else:
+        print("result is", result)
+    finally:
+        print("finally clause")
+
+print("divide(2, 1)")
+divide(2, 1)
+print()
+
+print("divide(2, 0)")
+divide(2, 0)
+print()
+
+print('divide("2", "0")')
+divide("2", "1")
+\end{minted}
+\end{codebox}
+%
+\begin{cmdbox}[Output: All Clauses]
+\begin{minted}[fontsize=\scriptsize]{text}
+divide(2, 1)
+result is 2.0
+finally clause
+
+divide(2, 0)
+division by zero!
+finally clause
+
+divide("2", "1")
+finally clause
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+  File "<stdin>", line 3, in divide
+TypeError: unsupported operand type(s) 
+  for /: 'str' and 'str'
+\end{minted}
+\end{cmdbox}
+\end{tcbraster}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]{Triggering Exceptions: \inPy{raise}}
+%
+\begin{columns}[T]
+\column{.5\linewidth}
+\begin{itemize}
+\item Wrong usage of a class or function may cause harm
+\item Example: User enters a file name\\
+	\Thus could overwrite existing files
+\item Syntactically correct, but undesired behaviour
+\item[\Thus] \emph{Throw/Raise an exception}
+\end{itemize}
+%
+\column{.5\linewidth}
+\vspace{-6pt}
+\begin{codebox}[Syntax: \texttt{raise}]
+\begin{minted}[fontsize=\scriptsize]{python}
+raise ErrorClass(Arguments)
+\end{minted}
+\end{codebox}
+%
+\begin{itemize}
+\item \texttt{ErrorClass}: As shown before: \inPy{ArithmeticError}, \inPy{ZeroDivisionError}, ...
+\item \texttt{Arguments}: Depends on Error Class
+	\begin{itemize}
+	\item Usually: String, will be output in Error Handling
+	\end{itemize}
+\end{itemize}
+\end{columns}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]
+%
+\begin{tcbraster}[raster columns=2,
+                  raster equal height,
+                  nobeforeafter,
+                  raster column skip=0.5cm]
+\begin{codebox}[Example: Raising Exceptions]
+\begin{minted}[linenos, fontsize=\scriptsize]{python}
+print("Please choose an option:")
+print("START game")
+print("show HIGHSCORE")
+print("QUIT")
+
+option = input("> ")
+
+if not option.upper() in [
+    "START",
+    "HIGHSCORE",
+    "QUIT"
+] :
+    raise RuntimeError(
+        "Invalid choice"
+    )
+\end{minted}
+\end{codebox}
+%
+\begin{cmdbox}[Output: Raising Exceptions]
+\begin{minted}[fontsize=\scriptsize]{text}
+Please choose an option:
+START game
+show HIGHSCORE
+QUIT
+> SETTINGS
+Traceback (most recent call last):
+  File "<stdin>", line 2, in <module>
+RuntimeError: Invalid choice
+\end{minted}
+\end{cmdbox}
+\end{tcbraster}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]{Re-\inPy{raise}}
+%
+\begin{columns}[T]
+\column{.5\linewidth}
+\begin{itemize}
+\item Possibly desired: Debug-Output, but no full treatment of the exception
+\item Superior functional unit (end user) treats the problem
+\item[\Thus] Reactivate error after \enquote{treatment}: \inPy{raise} \emph{without} error class
+\end{itemize}
+
+\vspace{8pt}
+\begin{cmdbox}[Output: re-\texttt{raise}]
+\begin{minted}[fontsize=\scriptsize]{text}
+division by zero
+x = 1, y = 0
+Error was caught, eventually
+\end{minted}
+\end{cmdbox}
+%
+\column{.5\linewidth}
+\vspace{-6pt}
+\begin{codebox}[Example: re-\texttt{raise}]
+\begin{minted}[fontsize=\scriptsize]{python}
+def divide(x, y) :
+  try :
+    result = x / y
+  except ZeroDivisionError as e:
+    print(e)
+    print(f"x = {x}, y = {y}")
+    raise
+  else :
+    return result
+
+try :
+  print( divide(1, 0) )
+except ZeroDivisionError as e:
+  print("Error was caught, eventually")
+\end{minted}
+\end{codebox}
+%
+\end{columns}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]{}
+%
+\begin{hintbox}[Choose Error Classes with Maximum Specificity]
+Error classes should be chosen very narrowly, such that treatment can be written effectively. 
+
+\vspace{6pt}
+Catching Errors too unspecifically can cause more harm than doing good by masking the true cause with the wrong treatment
+\end{hintbox}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]{Creating Own Error Classes}
+%
+\begin{columns}[T]
+\column{.5\linewidth}
+\begin{itemize}
+\item Error Classes are, in fact \emph{classes} in the Python sense
+\item Hierarchical Structure through \emph{inheritance}
+\item All necessary properties can be inherited from class \inPy{Exception} (or from classes derived thereof)
+\item Class may remain empty otherwise (\inPy{pass}), or hold custom code deemed useful for error treatment
+\end{itemize}
+%
+\column{.5\linewidth}
+\vspace{-6pt}
+\begin{codebox}[Syntax: Creating an Own Error Class]
+\begin{minted}[fontsize=\scriptsize]{python3}
+class OwnErrorClass (Exception) :
+   pass
+\end{minted}
+\end{codebox}
+%
+\begin{itemize}
+\item In \inPy{Exception}: String with a short summary (\inPy{print(e)})
+\item You may use your full knowledge about classes: attributes, methods, dunders, ...
+\end{itemize}
+%
+\end{columns}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]
+%
+\begin{codebox}[Example: Creating an Own Error Class]
+\begin{minted}[linenos,fontsize=\scriptsize]{python3}
+class UserInputError(Exception) :
+    pass
+
+
+try:
+    x = float(input("Please provide a positive number"))
+    if x < 0 :
+        raise UserInputError("Negative number entered!")
+
+except UserInputError as e :
+    print(e)
+\end{minted}
+\end{codebox}
+%
+\end{frame}

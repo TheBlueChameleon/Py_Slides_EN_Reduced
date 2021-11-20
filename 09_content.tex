@@ -1,0 +1,749 @@
+% =========================================================================== %
+
+\begin{frame}[t,plain]
+\titlepage
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]{Recap}
+%
+\begin{columns}[T]
+\column{.5\linewidth}
+\begin{itemize}
+\item Classes
+	\begin{itemize}
+	\item Collections of Data with associated context
+	\item Class- and Instance-attributes
+	\item Methods: Functions that access the data of some instance
+	\item Convention: first method parameter \inPy{self}
+	\end{itemize}
+\end{itemize}
+%
+\column{.5\linewidth}
+\begin{itemize}
+\item Dunders or Magic Methods
+	\begin{itemize}
+	\item Called automatically in certain circumstances
+	\item \inPy{__init__}: Constructor
+	\item \inPy{__str__} and \inPy{__repr__}: representation as text
+	\item \inPy{__call__}: use instance as function
+	\end{itemize}
+\end{itemize}
+\end{columns}
+%
+\begin{center}
+Any Questions?
+\end{center}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]{Chapter 7}
+%
+\begin{itemize}
+\item Dunders: 
+	\begin{itemize}
+	\item Comparisons
+	\item Computations
+	\item Right Hand Side Operations
+	\item Index Access
+	\item Count of Elements and Absolute Value
+	\end{itemize}
+\item Inheritance
+\end{itemize}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]{\inPy{__len__} and \inPy{__abs__}}
+%
+\begin{columns}[T]
+\column{.5\linewidth}
+\begin{itemize}
+\item Called via \inPy{len(instance)} and \inPy{abs(instance)}, respectively
+\item Implementation freely chooseable, but should reflect properties of absolute value and length
+	\begin{itemize}
+	\item \inPy{len}: often \inPy{int}eger, number of elements (cf. \inPy{str}ings: number of characters)
+	\item \inPy{abs}: often \inPy{float}, length of a vector)
+	\end{itemize} 
+\end{itemize}
+%
+\column{.5\linewidth}
+\vspace{-6pt}
+\begin{codebox}[Example: \texttt{\_\_abs\_\_}]
+\begin{minted}[fontsize=\scriptsize, linenos]{python3}
+class Expartner :
+    # Attributes and definitions
+    # like last time
+    
+    def __abs__(self) :
+        return self.rating()
+    
+    def __len__(self) :
+        return self.height
+
+print(f"time with {ex.name}: {abs(ex)}")
+print(f"height of {ex.name}: {len(ex)}")
+\end{minted}
+\end{codebox}
+\end{columns}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]{\inPy{__eq__}, \inPy{__ne__}, \inPy{__gt__}, \inPy{__ge__}, \inPy{__lt__} and \inPy{__le__}: Comparisons}
+%
+\begin{columns}[T]
+\column{.5\linewidth}
+\begin{itemize}
+\item Functions that tell the relationship (ordering) between two instances
+\item Called via comparison operators
+\item Comparison operators: \texttt{==}, \texttt{!=}, \texttt{>}, \texttt{>=}, \texttt{<}, \texttt{<=}
+\item Example: \inPy{instance1 == instance2} 
+\item[\Thus] \inPy{instance1.__eq__(instance2__)}
+\end{itemize}
+%
+\column{.5\linewidth}
+\vspace{-6pt}
+\begin{codebox}[Syntax: Definition]
+\begin{minted}[fontsize=\scriptsize]{python3}
+class ClassName :
+    def __XX__ (self, rhs) :
+       return ... # True, if self XX rhs
+\end{minted}
+\end{codebox}
+%
+\begin{codebox}[Syntax: Call]
+\begin{minted}[fontsize=\scriptsize]{python3}
+print(instance1 XX instance2)
+\end{minted}
+\end{codebox}
+\end{columns}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]
+%
+\begin{codebox}[Example: Direct comparison between instances]
+\begin{minted}[linenos, fontsize=\scriptsize]{python3}
+class Expartner :
+    # __init__, class attributes, method rating, ... like last time
+    
+    def __gt__(self, rhs) :
+        return self.rating() > rhs.rating()
+    
+    def __le__(self, rhs) :
+        return not (self > rhs)
+
+# Definition of instances ex1, ex2 like last time
+
+betterText = "not" if ex1 <= ex2 else ""
+print(f"It was {betterText} better with {ex1.name} than with {ex2.name}.")
+\end{minted}
+\end{codebox}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]
+%
+\begin{hintbox}[Hint: Sortable lists]
+A class that implements either \inPy{__lt__} \emph{or} \inPy{__gt__} can be used with \inPy{sorted} or \inPy{listOfInstances.sort()} respectively!
+\end{hintbox}
+%
+\begin{codebox}[Example: Sorting \texttt{list}s]
+\begin{minted}[linenos, fontsize=\scriptsize]{python3}
+# Class Expartner as before
+# Some instances of Expartner with names ex1, ex2, ...
+
+listOfExes = [ex1, ex2, ex3, ex4]
+
+for i, ex in enumerate(sorted(listOfExes, reverse=True)) :
+    print(f"Rank #{i+1}: {ex.name}")
+\end{minted}
+\end{codebox}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]{Type Safety}
+%
+\begin{itemize}
+\item Most languages: data type fixed in parameter list
+\item Python: \emph{dynamic typing} -- everything is possible
+\item Result: syntactically correct but senseless calls
+\end{itemize}
+
+\vspace{6pt}
+\begin{tcbraster}[raster columns=2,
+                  raster equal height,
+                  nobeforeafter,
+                  raster column skip=0.5cm]
+\begin{codebox}[Example: Senseless Call]
+\begin{minted}[fontsize=\scriptsize, linenos]{python3}
+# Class Expartner as before
+# Instance MyEx
+
+print( myEx > 7 )
+# Equivalent to myEx.__gt__(7)
+\end{minted}
+\end{codebox}
+%
+\begin{cmdbox}[Output: Senseless Call]
+\begin{minted}[fontsize=\scriptsize]{text}
+Traceback (most recent call last):
+  File "exes.py", line 289, in <module>
+    print(allExes[0] < 0)
+TypeError: '<' not supported between
+  instances of 'Expartner' and 'int'
+\end{minted}
+\end{cmdbox}
+\end{tcbraster}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]{Adding Type Safety Manually}
+
+\vspace{-6pt}
+\begin{codebox}[Example: Type Safe Comparison]
+\begin{minted}[fontsize=\scriptsize, linenos]{python3}
+class Expartner :
+    # everything as before
+    
+    def __gt__ (self, rhs) :
+        if type(rhs) in (int, float) :
+            return self.rating() > rhs
+            
+        elif type(rhs) == Expartner :
+            return self.rating() > rhs.rating()
+            
+        else :
+            raise Exception(f"Types 'Expartner' and '{type(rhs)}' cannot be compared!")
+            # causes error message, terminates code execution
+            # More on that in lecture 11
+
+print( myEx > 7 )  # works just fine!
+\end{minted}
+\end{codebox}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]{\inPy{__add__}, \inPy{__neg__}, \inPy{__sub__}, \inPy{__mul__}, \inPy{__truediv__}, \inPy{__floordiv__}, \inPy{__pow__} and \inPy{__matmul__}: Computations}
+%
+\begin{columns}[T]
+\column{.5\linewidth}
+\begin{itemize}
+\item Same logic as with comparison operators
+\item Implements operations \inPy{A + B}, \inPy{-A}, \inPy{A - B}, \inPy{A * B}, \inPy{A / B}, \inPy{A // B}, \inPy{A ** B} and \texttt{A @ B}
+\item Operator \texttt{@}: \emph{arbitrary operation}, usually matrix produkt
+\item Also common: cross product ($\times$)
+\end{itemize}
+%
+\column{.45\linewidth}
+\vspace{-6pt}
+\begin{codebox}[Syntax: Definition]
+\begin{minted}[fontsize=\scriptsize]{python3}
+class ClassName :
+    def __XX__ (self, rhs) :
+       return ...
+\end{minted}
+\end{codebox}
+%
+\begin{codebox}[Syntax: Aufruf]
+\begin{minted}[fontsize=\scriptsize]{python3}
+print(instance1 XX instance2)
+\end{minted}
+\end{codebox}
+\end{columns}
+
+\vspace{12pt}
+\emph{From here on: vectors. I wouldn't know which meaning to assign to \texttt{ex1 // ex2} ...}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}
+%
+\begin{hintbox}[Hint: Define Operators through their opposites]
+It can be time-consuming or at least tedious to define all operations for a class, in particular if they are very similar. We often find redundant code, different only in minor details. In the case of operators, we can often avoid this redundancy by explicitly defining only half the operations; the other half is defined in terms of its opposite operation.
+
+For example, we can implement \inPy{A >= B} as \inPy{not A < B} and \inPy{A - B} as \inPy{A + (-B)} (\ie in terms of \inPy{__neg__} and \inPy{__add__}).
+\end{hintbox}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}
+%
+\begin{center}
+	(Code: \texttt{004a-vectors.py})
+\end{center}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]{Left- and Right Hand Sided Operators}
+%
+Problem understood: Multiplication \emph{from the left} is treated by class \inPy{int}:
+\begin{warnbox}[Example: Right Hand Sided Multiplication, leftupper=6mm]
+\begin{minted}[linenos, firstnumber=90, fontsize=\scriptsize]{python3}
+print("Rescalied       :", v * 2)     # works fine
+print("Right hand sided:", 2 * v)     # !! crashes !!
+\end{minted}
+\end{warnbox}
+%
+\begin{cmdbox}[Output: Right Hand Sided Multiplication]
+\begin{minted}[fontsize=\scriptsize]{text}
+Traceback (most recent call last):
+  File "004a-vectors.py", line 91, in <module>
+    print("Right hand sided:", 2 * v)
+TypeError: unsupported operand type(s) for *: 'int' and 'vector3D'
+\end{minted}
+\end{cmdbox}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]{\inPy{NotImplemented} and Right Hand Sided Operatores}
+%
+\begin{itemize}
+\item Special Return Value: \inPy{NotImplemented}
+\item Caught by Python. Depending on Scenario: Different Strategies
+\item Here: Attempt to call method \inPy{__rmul__} of RHS argument
+	\begin{itemize}
+	\item Like \inPy{__mul__}, but assumes that \inPy{self} is on the \emph{right hand side} of the operation
+	\item[\Thus] \texttt{r} in \texttt{rmul}
+	\item[\Thus] Second argument to \inPy{__rmul__} consequently is the LHS operand
+	\end{itemize}
+\item Likewise: \inPy{__radd__}, \inPy{__rsub__}, ...
+\item If these methods do not exist: Error message and abort
+\end{itemize}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]
+%
+\begin{codebox}[Example: Right Hand Sided Multiplication]
+\begin{minted}[linenos, fontsize=\scriptsize]{python3}
+class Vector3D :
+    # as before
+    
+    # ........................................................................ #
+    
+    def __mul__(self, rhs) :
+        if type(rhs) == vector3D :
+            return self.x * rhs.x  +  self.y * rhs.y  +  self.z * rhs.z
+        elif type(rhs) in (int, float) :
+            return vector3D(self.x * rhs, self.y * rhs, self.z * rhs)
+        else :
+            return NotImplemented   #  <== make Python find an alternative
+    
+    # ........................................................................ #
+    
+    def __rmul__(self, lhs) :       #  <== and offer an alternative
+      return self * lhs;
+
+print(2 * v)    # calls Vector3D.__rmul__(v, 2) (after a detour via int.__mul__)!
+\end{minted}
+\end{codebox}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]{Index Access}
+%
+\begin{columns}[T]
+\column{.49\linewidth}
+\begin{itemize}
+\item Scenario: Index access desired, \eg \inPy{v[1]} \thus \inPy{v.x}
+\item Can be useful, \eg for looping over elements
+\item Often desired: forbid access to non-existing elements
+\item Solution: two new dunders:
+	\begin{itemize}
+	\item \inPy{__getitem__(self, index)} \\ Read access
+	\item \inPy{__setitem__(self, index, value)} \\ Write Access
+	\end{itemize}
+\item \texttt{index} is the expression in \texttt{[}brackets\texttt{]}
+\end{itemize}
+%
+\column{.53\linewidth}
+\vspace{-6pt}
+\begin{codebox}[Syntax: \texttt{\_\_getitem\_\_}{,} \texttt{\_\_setitem\_\_}]
+\begin{minted}[fontsize=\scriptsize]{python3}
+class ClassName :
+    ...
+    
+    def __getitem__(self, index) :
+        return ...
+    
+    def __setitem__(self, index, value) :
+        ... = value
+\end{minted}
+\end{codebox}
+%
+\begin{itemize}
+\item \texttt{index} can be of arbitrary data type!
+\item Cf. \inPy{dict}s!
+\item \inPy{instance[1, 2]} \Thus \inPy{index = (1, 2)}, \ie a \inPy{tuple}
+\end{itemize}
+\end{columns}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]
+%
+\vspace{-6pt}
+\begin{codebox}[Example: Index-Getter und -Setter]
+\begin{minted}[linenos, fontsize=\scriptsize]{python3}
+class Vector3D :
+    # as before
+    # ........................................................................ #
+    def _checkIndex(self, index) :
+        if type(index) != int :
+            raise Exception("Index-Type not supported!")
+        elif index not in (1, 2, 3) :
+            raise Exception("Index out of bounds")
+    # ........................................................................ #    
+    def __getitem__(self, index) :
+        self._checkIndex(index)
+        if   index == 1 : return self.x
+        elif index == 2 : return self.y
+        elif index == 3 : return self.z    
+    # ........................................................................ #    
+    def __setitem__(self, index, value) :
+        self._checkIndex(index)
+        if   index == 1 : self.x = value
+        elif index == 2 : self.y = value
+        elif index == 3 : self.z = value
+\end{minted}
+\end{codebox}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]
+%
+\vspace{-6pt}
+\begin{hintbox}[Hint: Common Code in Shared Method]
+Where there are common features between any two methods, a \enquote{hidden method} can do the shared tasks. Functions are commonly \enquote{hidden} by choosing a name beginning with an underscore (\texttt{\_}).
+\end{hintbox}
+%
+\begin{codebox}[Scheme: Shared and specifc code blocks]
+\begin{minted}[linenos, fontsize=\scriptsize]{python3}
+def _sharedCode(sharedParameters) :
+    ...
+
+def procA(sharedParameters, specificParameters) :
+   _sharedCode(sharedParameters)
+   specific code A
+   ...
+
+def procB(sharedParameters, specificParameters) :
+   _sharedCode(sharedParameters)
+   specific code B
+   ...
+\end{minted}
+\end{codebox}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]{Inheritance}
+%
+\begin{columns}[T]
+\column{.5\linewidth}
+\begin{itemize}
+\item Idea: create a new class that is an extension/alteration of an existing class
+\item Lingu: \emph{base class} or \emph{parent class}
+	\begin{itemize}
+	\item Template, is copied
+	\end{itemize}
+\item Lingu: \emph{derived class} or \emph{child class}
+	\begin{itemize}
+	\item Newly created
+	\item Contains all definitions from the parent class
+	\item May contain arbitrary new definitions
+	\item \enquote{child class inherits from parent class}
+	\end{itemize}
+\end{itemize}
+%
+\column{.45\linewidth}
+\vspace{-6pt}
+\begin{codebox}[Syntax: Creating a Derived Class]
+\begin{minted}[fontsize=\scriptsize]{python3}
+class DerivedClass(ParentClass) :
+   # arbitrary Code
+\end{minted}
+\end{codebox}
+%
+\begin{itemize}
+\item Properties of the parent class can be overwritten
+\item Changes affect only child class
+\end{itemize}
+\end{columns}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]
+%
+\begin{codebox}[Example: Derived Class]
+\begin{minted}[linenos, fontsize=\scriptsize]{python3}
+class Vector3D :
+    # ... as before
+
+class ColourArrow (Vector3D) :
+    Arrowcount = 0    # new class attribute
+    
+    def __init__(self, x, y, z, color) : # overwrites / replaces old method
+        self.x = x                       # in the child class
+        self.y = y
+        self.z = z
+        self.color = color
+        ColourArrow.Arrowcount += 1
+    
+    def __str__(self) :                  # dito: overwrite method from Vector3D
+        return "(" + str(self.x) + ", " + str(self.y) + ", " + str(self.z) + \
+               ") in " + self.color
+
+cA = ColourArrow(1, 4, 9, "red")      # call new method __init__
+print( abs(cA) )                      # call old method __abs__
+\end{minted}
+\end{codebox}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]{Using Code from the Parent Class -- \inPy{super()}}
+%
+\begin{itemize}
+\item Example on previous slide: copy\&paste-code
+\item Instead: Want to direcly use parent class code
+\item \inPy{super()}: \enquote{computes} an object, formally belonging to the parent class but describing \inPy{self}
+\item[\Thus] Methods of the parent class can be applied on  \inPy{self}
+\end{itemize}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]
+%
+\begin{codebox}[Example: Child Class with \texttt{super()}]
+\begin{minted}[linenos, fontsize=\scriptsize]{python3}
+class Vector3D :
+    # ... as before
+
+class ColourArrow (Vector3D) :
+    Arrowcount = 0
+    
+    def __init__(self, x, y, z, color) :
+        super().__init__(x, y, z)                             # <==
+        self.color = color
+        ColourArrow.Arrowcount += 1
+    
+    def __str__(self) :
+        return super().__str__() + " in " + self.color        # <==
+
+cA = ColourArrow(1, 4, 9, "red")
+print( abs(cA) )
+print("There are", ColourArrow.Arrowcount, "ColourArrows.")
+print(cA)
+\end{minted}
+\end{codebox}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]{Multiple Inheritance and Layers of Inheritance}
+%
+\begin{itemize}
+\item Child classes can be parent classes themselves \Thus multiple layers possible
+\item Child Classes can inherit properties from \emph{multiple} parent classes
+\item \inPy{class ChildClass (ParentClass1, ParentClass2, ...) :}
+\item May not end in name collisions
+	\begin{itemize}
+	\item[\Thus] If \texttt{ParentClass1} already implements \texttt{method}, \texttt{ParentClass2} should not implement \texttt{method} as well
+	\item[\Thus] If this \emph{is} the case: \texttt{method} will be copied only from \texttt{ParentClass1}
+	\item[\Thus] Order of parent classes matters in line \inPy{class ChildClass (ParentClass1, ParentClass2, ...) :}
+	\end{itemize}
+\end{itemize}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]{Inheritance Diagram}
+%
+
+\tikzstyle{class}=[rectangle, draw=black, rounded corners, fill=blue!40!black,
+        text centered, anchor=north, text=white, text width=4.5cm]
+\tikzstyle{instance}=[rectangle, draw=black, rounded corners, fill=green!40!white,
+        text centered, anchor=north, text=black, text width=4.5cm]
+                
+\tikzstyle{inherits}=[->, >=open triangle 90, thick]
+\tikzstyle{instantiates}=[->, >=open diamond, thick]
+%
+\begin{tikzpicture}[node distance=1cm]
+	\node (Animal) [class]                  {\texttt{Animal}};
+	\node (Mammal) [class, below=of Animal] {\texttt{Mammal}};
+	
+	\node (AuxNode01) [          below=of Mammal   , text width=0.0cm] {};
+	\node (AuxNode02) [          right=of Animal   , text width=0.5cm] {};
+	\node (Klasse)    [class,    right=of AuxNode02, text width=3.0cm] {\texttt{Class}};
+	\node (Instanz)   [instance, below=of Klasse   , text width=3.0cm] {\texttt{Instance}};
+	
+	\node (NonWingedMammal) [class, left =of AuxNode01] {\texttt{NonWingedMammal}};
+	\node (NonMarineMammal) [class, right=of AuxNode01] {\texttt{NonMarineMammal}};
+	
+	\node (Dog) [class, below=of AuxNode01] {\texttt{Dog}};
+	
+	\node (dog) [instance, below=of Dog] {\texttt{dog}};
+	\node (bat) [instance, right=of dog] {\texttt{bat}};
+	
+	\draw[inherits] (Mammal.north) -| (Animal.south);
+	\draw[inherits] (NonWingedMammal.north) -- ++(0,0.36) -| (Mammal.south);
+	\draw[inherits] (NonMarineMammal.north) -- ++(0,0.40) -| (Mammal.south);
+	\draw[inherits] (Dog.north) -- ++(0,0.40) -| (NonMarineMammal.south);
+	\draw[inherits] (Dog.north) -- ++(0,0.40) -| (NonWingedMammal.south);
+	
+	\draw[instantiates] (dog.north) -- ++(0,0.40) -| (Dog.south);
+	\draw[instantiates] (bat.north) -- ++(0,1.20) -| ([xshift=0.8cm] NonMarineMammal.south);
+\end{tikzpicture}
+%
+\end{frame}
+% =========================================================================== %
+
+\begin{frame}[fragile]
+%
+\begin{tcbraster}[raster columns=2,
+                  raster equal height,
+                  nobeforeafter,
+                  raster column skip=0.5cm]
+\begin{codebox}[Example: Multi-Inheritance ...]
+\begin{minted}[fontsize=\scriptsize, linenos]{python3}
+class Animal :
+  def __init__(self, Animal) :
+    print(Animal, 'is an animal.')
+    
+class Mammal(Animal) :
+  def __init__(self, mammalName) :
+    print(mammalName, 
+          'is a warm-blooded animal.')
+    super().__init__(mammalName)
+
+class NonWingedMammal(Mammal) :
+  def __init__(self, NonWingedMammal) :
+    print(NonWingedMammal, "can't fly.")
+    super().__init__(NonWingedMammal)
+\end{minted}
+\end{codebox}
+%
+\begin{codebox}[... (continued)]
+\begin{minted}[fontsize=\scriptsize, linenos, firstnumber=last]{python3}
+class NonMarineMammal(Mammal) :
+  def __init__(self, NonMarineMammal) :
+    print(NonMarineMammal, 
+          "can't swim.")
+    super().__init__(NonMarineMammal)
+    
+class Dog(NonMarineMammal,
+          NonWingedMammal) :
+  def __init__(self) :
+    print('Dog has 4 legs.')
+    super().__init__('Dog')
+
+dog = Dog()
+print('')
+bat = NonMarineMammal('Bat')
+\end{minted}
+\end{codebox}
+\end{tcbraster}
+%
+\begin{center}
+	\scriptsize
+	Source:
+	\url{https://www.programiz.com/python-programming/methods/built-in/super}
+\end{center}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]
+%
+\begin{tcbraster}[raster columns=2,
+                  raster equal height,
+                  nobeforeafter,
+                  raster column skip=0.5cm]
+\begin{cmdbox}[Output: Multi-Inheritance]
+\begin{minted}[fontsize=\scriptsize]{text}
+Dog has 4 legs.
+Dog can't swim.
+Dog can't fly.
+Dog is a warm-blooded animal.
+Dog is an animal.
+
+Bat can't swim.
+Bat is a warm-blooded animal.
+Bat is an animal.
+\end{minted}
+\end{cmdbox}
+%
+\begin{hintbox}[Hint: Keep Class Relations Simple]
+In practice, inheritance over multiple layers leads to a lot of confusion; this holds even more so for multi-inheritance.
+
+\vspace{3pt}
+Avoid overly complicated structures; keep classes self-contained whereever possible.\\
+(\Thus \emph{KISS-Principle})
+\end{hintbox}
+\end{tcbraster}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]
+%
+\begin{warnbox}[Known Bugs and Further Reading]
+\small
+There are known bugs with the resolution of the \inPy{super()} function. To my knowledge, this has been solved with Python 3.9 but may be still a matter of ongoing devellopment.
+
+\vspace{6pt}
+If you are interested in how \inPy{super()} works in more complex scenarios, look up \emph{MRO} (\emph{method resolution order}).
+
+\vspace{6pt}
+Links:
+\begin{itemize}
+\item \url{https://realpython.com/python-super/}
+\item \url{https://bugs.python.org/issue38262}
+\end{itemize}
+\end{warnbox}
+%
+\end{frame}
