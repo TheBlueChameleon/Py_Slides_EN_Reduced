@@ -46,6 +46,55 @@
 \end{center}
 %
 \end{frame}
+
+% =========================================================================== %
+
+\begin{frame}{Recap}
+%
+\begin{columns}[T]
+\column{.5\linewidth}
+\begin{itemize}
+\item Manipulating the file cursor
+	\begin{itemize}
+	\item \texttt{handle.tell} -- get current position
+	\item \texttt{handle.seek(offset, startPoint)} -- move file cursor
+	\end{itemize}
+\item Pickle
+	\begin{itemize}
+	\item Serialize objects
+	\item Works with (virtually) everything in Python
+	\item May contain (harmful) code
+	\item \texttt{pickle.dump} and \texttt{pickle.load}
+	\end{itemize}
+\end{itemize}
+%
+\column{.5\linewidth}
+\begin{itemize}
+\item JSON
+	\begin{itemize}
+	\item Inter-Plattform serialization
+	\item Only works with specific data types
+	\item Human readable format
+	\item \texttt{json.dump} and \texttt{json.load}
+	\item Usually: \inPy{dict}s of variables
+	\end{itemize}
+\item CSV
+	\begin{itemize}
+	\item Data in columns
+	\item Class \texttt{DictReader} via \texttt{csv.reader}
+	\item Iterable -- can be used with \inPy{for}
+	\item Rows split into columns by a separator character (\eg \texttt{','}) into \inPy{list}s
+	\end{itemize}
+\end{itemize}
+
+\end{columns}
+%
+\begin{center}
+	\emph{Any Questions?}
+\end{center}
+%
+\end{frame}
+
 % =========================================================================== %
 
 \begin{frame}[fragile]{Mind-Pictures: Classes as Professions}
