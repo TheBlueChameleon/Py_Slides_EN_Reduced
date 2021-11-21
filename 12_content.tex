@@ -706,12 +706,14 @@ with open("annual-number-of-births-by-world-region.csv", "r") as handle :
         europe  .append(float(line[4]) / 1000)
         oceania .append(float(line[5]) / 1000)
 
-
 plt.title ("annual number of births by world region")
 plt.xlabel("year")
 plt.ylabel("annual number of births in millions")
 plt.legend(loc="upper left")
 
+plt.stackplot(years,
+              asia, africa, americas, europe, oceania,
+              labels=labels, colors=colors)
 plt.show()
 \end{minted}
 \end{codebox}
