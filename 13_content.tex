@@ -183,35 +183,7 @@ input()
 \item Use when creating a new subplot: \inPy{ax = fig.add_subplot(gs[...])}
 	\begin{itemize}
 	\item Index can be a \inPy{tuple} of \inPy{int}s: \texttt{gs[row, column]} ...
-	\item ... or a \inPy{tuple} of \inPy{slice}s:\inPy{gs[row_start : row_end, column]}
-	\end{itemize}
-\end{itemize}
-%
-\end{frame}
-
-% =========================================================================== %
-
-\begin{frame}[fragile]{The Object-Oriented Approach to MatPlotLib/PyPlot}
-%
-\begin{itemize}
-\item Idea: plots and the elements thereof are objects
-\item Allows more comfortable/intuitive composition of plots
-\item Dynamic evolution of plots (\eg on trigger, zoom in)
-\item Primary objects: \texttt{Figure} and \texttt{AxesSubplot}
-	\begin{itemize}
-	\item \texttt{Figure}: window containing the plots
-	\item \texttt{AxesSubplot}: rectangular region in the window where a plot can be placed
-	\item Get these objects via \texttt{fig = plt.figure()} and \texttt{ax = fig.add\_subplot()}
-	\end{itemize}
-\item All objects provide methods for changing them
-	\begin{itemize}
-	\item E.\;g. \texttt{AxesSubplot}: \texttt{plot}, \texttt{bar}, \texttt{pie}, ...
-	\item E.\;g. \texttt{Figure}: \texttt{suptitle}, \texttt{add\_subplot}, \texttt{show}
-	\end{itemize}
-\item \texttt{show} behaves differently
-	\begin{itemize}
-	\item \texttt{plt.show()} shows all figures at once, waits till all are closed
-	\item \texttt{fig.show()} shows only the figure \texttt{fig}
+	\item ... or a \inPy{tuple} of \inPy{slice}s: \inPy{gs[row_start : row_end, column]}
 	\end{itemize}
 \end{itemize}
 %
@@ -327,10 +299,11 @@ fig.show()
 	\item \texttt{minor}: as above
 	\item Optional parameter \texttt{fontdict}: \inPy{dict} with additional format parameters
 		\begin{itemize}
-		\item \inPy{'fontsize'} \thus \inPy{int}
-		\item \inPy{'fontweight'} \thus \inPy{str}, \eg \inPy{'bold'} or \inPy{'bold'}
+		\item \inPy{'fontsize'} \thus \inPy{float}
+		\item \inPy{'fontweight'} \thus \inPy{str}, \eg \inPy{'bold'} or \inPy{'light'}
+		\item \inPy{'fontstyle'} \thus \inPy{str} from \{\inPy{'normal'}, \inPy{'italic'}, \inPy{'oblique'} \}
 		\item ...
-		\item \url{https://matplotlib.org/3.3.1/api/text_api.html#matplotlib.text.Text}
+		\item \url{https://matplotlib.org/3.5.0/api/text_api.html#matplotlib.text.Text}
 		\end{itemize}
 	\end{itemize}
 \end{itemize}
@@ -361,7 +334,7 @@ fig.show()
 
 \begin{frame}[fragile]
 %
-\begin{codebox}[Example: Tickmarks, width=.65\linewidth, nobeforeafter, equal height group = grpXmpFormatter]
+\begin{codebox}[Example: Tickmarks, width=.63\linewidth, nobeforeafter, equal height group = grpXmpFormatter]
 \begin{minted}[linenos, fontsize=\scriptsize]{python3}
 from matplotlib.ticker import FuncFormatter
 import matplotlib.pyplot as plt
@@ -375,9 +348,9 @@ ax.bar(x, money)
 
 ax.set_xticks(x)
 ax.set_xticklabels(['Bill', 'Fred', 'Mary', 'Sue'],
-    fontdict={'fontsize' :15, 'fontweight' : 'bold'})
+    fontdict={'fontsize':15, 'fontweight':'bold'})
 
-myTicks   = lambda x, pos : f"{x*1e-6:1.1f}M, #{pos}"
+myTicks = lambda x, pos : f"{x*1e-6:1.1f}M, #{pos}"
 formatter = FuncFormatter(myTicks)
 ax.yaxis.set_major_formatter(formatter)
 
@@ -385,7 +358,7 @@ plt.show()
 \end{minted}
 \end{codebox}
 %
-\begin{tcolorbox}[title=Output: Tickmarks, width=.32\linewidth, nobeforeafter, equal height group = grpXmpFormatter]
+\begin{tcolorbox}[title=Output: Tickmarks, width=.34\linewidth, nobeforeafter, equal height group = grpXmpFormatter]
 	\hspace{-13pt}
 	\includegraphics[width=1.22\linewidth]{./gfx/plt-TicksFormatter}
 \end{tcolorbox}
@@ -394,3 +367,346 @@ plt.show()
 
 % =========================================================================== %
 
+\begin{frame}[fragile]{\LaTeX Elements}
+%
+\begin{itemize}
+\item Labels and Titles may contain (limited) \LaTeX code
+\item Encase \LaTeX\xspace elements with \$dollar signs\$
+\item Example:
+	\begin{itemize}
+	\item \inPy{plt.title(r"$\frac {\pi }{2} \approx $ 3.1415")}
+	\item Gives $\scriptstyle \frac {\pi }{2} \approx 3.1415$
+	\item Prefix r: no escape character (\textbackslash)
+	\end{itemize}
+\item Possible to use a full scope \LaTeX compiler
+	\begin{itemize}
+	\item Requires option \inPy{matplotlib.rcParams['text.usetex'] = True}
+	\item Requires installed external \LaTeX compiler
+	\item Significant runtime
+	\end{itemize}
+\end{itemize}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]{Plot Elements -- Return Values of the Plot Functions}
+%
+\begin{itemize}
+\item Functions/Methods like \texttt{plot}, \texttt{pie}, ... have return values
+\item Represent (collections of) plot elements, \eg lines, wedges, ...
+\item Can be used to change Elements dynamically
+\item Example:
+	\begin{itemize}
+	\item \texttt{plt.plot} or \texttt{ax.plot} returns a \inPy{list} of \texttt{Line2D} objects ...
+	\item ... which have properties \texttt{data}, \texttt{color}, ...
+	\item ... and methods \texttt{set\_color}, etc.
+	\item Update only in memory
+	\item Update on screen: \texttt{fig.canvas.draw()}
+	\end{itemize}
+\item See \url{https://matplotlib.org/3.5.0/api/index.html}
+\end{itemize}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]
+%
+\vspace{-5pt}
+\begin{codebox}[Code: Updating a Plot]
+\begin{minted}[linenos, fontsize=\scriptsize]{python3}
+import math
+import matplotlib.pyplot as plt
+
+fig = plt.figure()
+ax = fig.add_subplot()
+
+X = [x / 100 for x in range(0, 628, 5)]
+Y = [math.sin(2 * t) + 2 for t in X]
+
+p = ax.plot(X, Y, "y-", label="foo")
+q = ax.plot(X, Y, "r.", label="bar")
+fig.show(); input()
+
+print(type(p), p[0], type(p[0]))
+# <class 'list'> Line2D(foo) <class 'matplotlib.lines.Line2D'>
+
+print("change red dots to gold dots")
+q[0].set_color("gold")
+
+fig.canvas.draw(); input()
+\end{minted}
+\end{codebox}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]{Text Overlays}
+%
+\begin{itemize}
+\item Put additional free text on screen with command \texttt{plt.annotate} (or method \texttt{ax.annotate}, respectively)
+\item Mandatory arguments
+	\begin{itemize}
+	\item \texttt{text} -- what to print on plot
+	\item \texttt{xy} -- \inPy{tuple} of coordinates
+	\end{itemize}
+\item Optional arguments
+	\begin{itemize}
+	\item \texttt{xycoords} -- \inPy{str}ing: choice of coordnates
+		\begin{itemize}
+		\item \inPy{'figure fraction'} -- coordinates between 0 and 1, absolute coordinates (relative to window)
+		\item \inPy{'figure pixels'} -- absolute coordinates in pixels
+		\item \inPy{'axes pixels'} -- relative to axis of coordinates, unit pixels
+		\item \inPy{'data'} (default) -- same coordinates as plot elements
+		\end{itemize}
+	\item \texttt{horizontalalignment}, \texttt{verticalalignment}
+		\begin{itemize}
+		\item \inPy{'left'}, \inPy{'center'}, \inPy{'right'}
+		\item \inPy{'top'}, \inPy{'center'}, \inPy{'bottom'}
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]{Text Overlays with Arrows}
+%
+\begin{itemize}
+\item Extended version of \texttt{annotate}
+\item Extra parameter \texttt{xytext}
+	\begin{itemize}
+	\item Sets text position
+	\item Again: \inPy{tuple}
+	\item \texttt{xy} now is coordinate of tip of arrow
+	\end{itemize}
+\item Optional argument \texttt{arrowprops}
+	\begin{itemize}
+	\item \inPy{dict}, specifies look of arrow
+	\item see \url{https://matplotlib.org/3.5.0/api/_as_gen/matplotlib.axes.Axes.annotate.html#matplotlib.axes.Axes.annotate}
+	\end{itemize}
+\end{itemize}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]
+%
+\begin{codebox}[Example: Annotations, width=.6\linewidth, nobeforeafter, equal height group = grpXmpAnnotate]
+\begin{minted}[linenos, fontsize=\scriptsize]{python3}
+import math
+import matplotlib.pyplot as plt
+
+fig = plt.figure()
+ax = fig.add_subplot()
+
+X = [(x - 300) / 100 for x in range(0, 600, 5)]
+Y = [math.cos(x*10) * math.exp(-x**2) for x in X]
+
+ax.plot(X, Y)
+
+ax.annotate("Center of Wave Package",
+            xy = (0, 1),
+            xytext = (0.8, 0.5),
+            arrowprops={'arrowstyle' : '->'}
+)
+
+plt.show()
+\end{minted}
+\end{codebox}
+%
+\begin{tcolorbox}[title=Output: Annotations, width=.34\linewidth, nobeforeafter, equal height group = grpXmpAnnotate]
+		
+	\vspace{50pt}
+	\hspace{-13pt}
+	\includegraphics[width=1.22\linewidth]{./gfx/plt-overlay-simple}
+\end{tcolorbox}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]{3D Plots}
+%
+\begin{itemize}
+\item Specialized submodule allows 3D plots
+\item \inPy{from mpl_toolkits.mplot3d import Axes3D}
+\item \inPy{ax = fig.add_subplot(projection='3d')}
+\item \texttt{plot} now supports X, Y, Z \Thus curves in 3D
+\item Surface plots: \texttt{plot\_wireframe}, \texttt{plot\_surface}
+	\begin{itemize}
+	\item Requires Numpy module (see next week's lectures)
+	\item Preview: \texttt{linspace(start, stop, N)} generates \texttt{N} values between \texttt{start} and \texttt{stop}
+	\item Preview: \texttt{meshgrid(iterable1, iterable2, ...)} generates \inPy{tuple}s of all conceivable combinations of the contents of \texttt{iterable1}, ...
+	\end{itemize}
+\end{itemize}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]
+%
+\begin{codebox}[Example: 3D Curve, width=.6\linewidth, nobeforeafter, equal height group = grpXmp3DCurve]
+\begin{minted}[linenos, fontsize=\scriptsize]{python3}
+import math
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+
+fig = plt.figure()
+drw = fig.add_subplot(projection='3d')
+
+T = [math.pi * t / 100 for t in range(1000)]
+X = [math.exp(-0.05 * t) * math.cos(t) for t in T]
+Y = [math.exp(-0.05 * t) * math.sin(t) for t in T]
+
+drw.set_xlabel("x")
+drw.set_ylabel("y")
+drw.set_zlabel("time t")
+drw.set_title("decaying orbit")
+
+drw.view_init(80, 10)   # rotate 80° right, 10° up
+drw.plot(X, Y, T)
+plt.show()
+\end{minted}
+\end{codebox}
+%
+\begin{tcolorbox}[title=Output: 3D Curve, width=.34\linewidth, nobeforeafter, equal height group = grpXmp3DCurve]
+	\hspace{-13pt}
+	\includegraphics[width=1.22\linewidth]{./gfx/plt-orbit3D}
+\end{tcolorbox}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]
+%
+\begin{codebox}[Example: 3D Surface ..., width=.6\linewidth, nobeforeafter, equal height group = grpXmp3DSurface]
+\begin{minted}[linenos, fontsize=\scriptsize]{python3}
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+import numpy as np
+
+W = 20
+H = 30
+
+func = lambda x, y : x**2 - y**2
+
+X, Y = np.meshgrid(np.linspace(-1.0, 1.0, W),
+                   np.linspace(-1.5, 1.5, H))
+Z = X**2 - Y**2
+
+fig = plt.figure( figsize=(4,8) )
+ax1 = fig.add_subplot(211, projection='3d')
+ax2 = fig.add_subplot(212, projection='3d')
+
+ax1.plot_wireframe(X, Y, Z)
+ax2.plot_surface  (X, Y, Z)
+
+plt.show()
+
+\end{minted}
+\end{codebox}
+%
+\begin{tcolorbox}[title=Output: 3D Surface, width=.34\linewidth, nobeforeafter, equal height group = grpXmp3DSurface]
+	\includegraphics[width=.9\linewidth]{./gfx/plt-surface3D}
+\end{tcolorbox}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]{Pseudo 3D Plots}
+%
+\begin{itemize}
+\item Personal opinion: 3D plots are fancy but hard to read
+\item Elements hidden behind peaks
+\item My preference: colour maps
+\item \texttt{plt.pcolor}
+	\begin{itemize}
+	\item One rectangle per data point
+	\end{itemize}
+\item \texttt{plt.contour}
+	\begin{itemize}
+	\item Contour plot
+	\item Lines with (interpolated) same z coordinate
+	\end{itemize}
+\item \texttt{plt.contourf}
+	\begin{itemize}
+	\item Same as \texttt{contour}, but filled areas
+	\end{itemize}
+\item For all
+	\begin{itemize}
+	\item Available as command and as method on \texttt{ax}
+	\item Optional parameter \texttt{cmap} specifies a Colourmap
+	\item See \url{https://matplotlib.org/stable/gallery/color/colormap_reference.html}
+	\end{itemize}
+\end{itemize}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}
+%
+\begin{tcolorbox}[title=Pseudo 3D Plots]
+	\includegraphics[width=\linewidth]{./gfx/plt-falseColour}
+	
+	\scriptsize
+	Plots generated from same arrays \texttt{X, Y, Z} as before.
+\end{tcolorbox}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]
+%
+\begin{codebox}[Code: Pseudo 3D Plots]
+\begin{minted}[linenos, firstnumber=last, fontsize=\scriptsize]{python3}
+# same X, Y, Z as before
+fig = plt.figure(figsize=(12,4)); grd = fig.add_gridspec(1, 7)
+
+pcl = fig.add_subplot(grd[0,0:2]); pcl.set_title("pcolor")
+col = pcl.pcolor(X, Y, Z, shading='auto')
+
+cnt = fig.add_subplot(grd[0,2:4]); cnt.set_title("contour")
+cnt.set_yticks([])
+cnt.contour(X, Y, Z)
+
+cnf = fig.add_subplot(grd[0,4:6]); cnf.set_title("contourf")
+cnf.set_yticks([])
+cnf.contourf(X, Y, Z)
+
+bar = fig.add_subplot(grd[0,6]); bar.axis("off")
+fig.colorbar(col)
+plt.show()
+\end{minted}
+\end{codebox}
+%
+\end{frame}
+
+% =========================================================================== %
+
+\begin{frame}[fragile]{Saving Plots to the Hard Disk}
+%
+\begin{itemize}
+\item Objects of type \texttt{Figure} have method \texttt{savefig}
+\item Mandatory argument: \inPy{str}ing filename
+\item Optional Parameters
+	\begin{itemize}
+	\item \texttt{format}: \inPy{str}ing, specifies file format (\eg \inPy{'png'}, \inPy{'jpg'}, \inPy{'svg'}, \inPy{'pdf'}, ...).\\
+		Deduced from filename if omitted
+	\item \texttt{facecolor}: background colour of the file output
+	\item \texttt{edgecolor}: border color of the file output
+	\item \texttt{transparent}: \inPy{bool} makes plot background transparent
+	\item See \url{https://matplotlib.org/3.5.0/api/figure_api.html?highlight=savefig#matplotlib.figure.Figure.savefig}
+	\end{itemize}
+\end{itemize}
+%
+\end{frame}
