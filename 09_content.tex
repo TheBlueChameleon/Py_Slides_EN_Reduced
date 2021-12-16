@@ -13,10 +13,11 @@
 \begin{itemize}
 \item Classes
 	\begin{itemize}
-	\item Collections of Data with associated context
-	\item Class- and Instance-attributes
-	\item Methods: Functions that access the data of some instance
+	\item Collections of data with associated context
+	\item Class- and instance-attributes
+	\item Methods: functions that access the data of some instance
 	\item Convention: first method parameter \inPy{self}
+	\item Convention: class name capitalized, instance name lower case
 	\end{itemize}
 \end{itemize}
 %
@@ -278,7 +279,7 @@ print(instance1 XX instance2)
 \begin{frame}
 %
 \begin{hintbox}[Hint: Define Operators through their opposites]
-It can be time-consuming or at least tedious to define all operations for a class, in particular if they are very similar. We often find redundant code, different only in minor details. In the case of operators, we can often avoid this redundancy by explicitly defining only half the operations; the other half is defined in terms of its opposite operation.
+It can be time-consuming or at least tedious to define all operations for a class, in particular if they are very similar. We often find redundant code, differing only in minor details. In the case of operators, we can often avoid this redundancy by explicitly defining only half the operations; the other half is defined in terms of its opposite operation.
 
 For example, we can implement \inPy{A >= B} as \inPy{not A < B} and \inPy{A - B} as \inPy{A + (-B)} (\ie in terms of \inPy{__neg__} and \inPy{__add__}).
 \end{hintbox}
@@ -290,7 +291,7 @@ For example, we can implement \inPy{A >= B} as \inPy{not A < B} and \inPy{A - B}
 \begin{frame}
 %
 \begin{center}
-	(Code: \texttt{004a-vectors.py})
+	(Code: \texttt{007a-vectors.py})
 \end{center}
 %
 \end{frame}
@@ -302,7 +303,7 @@ For example, we can implement \inPy{A >= B} as \inPy{not A < B} and \inPy{A - B}
 Problem understood: Multiplication \emph{from the left} is treated by class \inPy{int}:
 \begin{warnbox}[Example: Right Hand Sided Multiplication, leftupper=6mm]
 \begin{minted}[linenos, firstnumber=90, fontsize=\scriptsize]{python3}
-print("Rescalied       :", v * 2)     # works fine
+print("Rescaled        :", v * 2)     # works fine
 print("Right hand sided:", 2 * v)     # !! crashes !!
 \end{minted}
 \end{warnbox}
@@ -323,8 +324,8 @@ TypeError: unsupported operand type(s) for *: 'int' and 'vector3D'
 \begin{frame}[fragile]{\inPy{NotImplemented} and Right Hand Sided Operatores}
 %
 \begin{itemize}
-\item Special Return Value: \inPy{NotImplemented}
-\item Caught by Python. Depending on Scenario: Different Strategies
+\item Special return value: \inPy{NotImplemented}
+\item Caught by Python. Depending on scenario: different strategies
 \item Here: Attempt to call method \inPy{__rmul__} of RHS argument
 	\begin{itemize}
 	\item Like \inPy{__mul__}, but assumes that \inPy{self} is on the \emph{right hand side} of the operation
@@ -332,7 +333,7 @@ TypeError: unsupported operand type(s) for *: 'int' and 'vector3D'
 	\item[\Thus] Second argument to \inPy{__rmul__} consequently is the LHS operand
 	\end{itemize}
 \item Likewise: \inPy{__radd__}, \inPy{__rsub__}, ...
-\item If these methods do not exist: Error message and abort
+\item If these methods do not exist: error message and abort
 \end{itemize}
 %
 \end{frame}
@@ -359,7 +360,7 @@ class Vector3D :
     # ........................................................................ #
     
     def __rmul__(self, lhs) :       #  <== and offer an alternative
-      return self * lhs;
+        return self * lhs;
 
 print(2 * v)    # calls Vector3D.__rmul__(v, 2) (after a detour via int.__mul__)!
 \end{minted}
@@ -645,7 +646,7 @@ print(cA)
 \begin{tcbraster}[raster columns=2,
                   raster equal height,
                   nobeforeafter,
-                  raster column skip=0.5cm]
+                  raster column skip=0.2cm]
 \begin{codebox}[Example: Multi-Inheritance ...]
 \begin{minted}[fontsize=\scriptsize, linenos]{python3}
 class Animal :

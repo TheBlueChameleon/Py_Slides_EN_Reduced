@@ -154,7 +154,7 @@ The asterisk only enables packing! It is not part of the variable name!
 \item Arbitrary count of \emph{optional} arguments
 	\begin{itemize}
 	\item Both, before and after the variadic one
-	\item Assignment via clause \inPy{optParam = Wert}
+	\item Assignment via clause \inPy{optParam = value}
 	\item Optional arguments \emph{cannot} be put in between variadic arguments
 	\item See more on that in a minute
 	\end{itemize}
@@ -185,7 +185,7 @@ def func (
 
 func(0, 1)
 func(0, 1, 2, 3, 4, 5, 6, "seven")
-func(0, 1, 2, 3, optArg2 = 4)
+func(0, 1, 2, optArg2 = 3)
 func(0, 1, optArg2 = 2)
 \end{minted}
 \end{codebox}
@@ -201,8 +201,8 @@ var. argument : (2, 3, 4, 5, 6, 'seven')
 opt. argument : -1
 
 pos. arguments: 0 1
-var. argument : (3,)
-opt. argument : 4
+var. argument : (2,)
+opt. argument : 3
 
 pos. arguments: 0 1
 var. argument : ()
@@ -324,7 +324,7 @@ key. argument : {'key': 'value'}
 \end{itemize}
 %
 \begin{columns}[T]
-\column{.4\linewidth}
+\column{.3\linewidth}
 \begin{itemize}
 \item Possible Order:
 	\begin{itemize}
@@ -335,7 +335,7 @@ key. argument : {'key': 'value'}
 	\end{itemize}
 \end{itemize}
 %
-\column{.4\linewidth}
+\column{.3\linewidth}
 \begin{itemize}
 \item Possible Order:
 	\begin{itemize}
@@ -346,8 +346,8 @@ key. argument : {'key': 'value'}
 	\end{itemize}
 \end{itemize}
 \end{columns}
-
 %
+\vspace{6pt}
 \begin{hintbox}[How to remember the order]
 The interpreter needs to be able to decide which arguments belong to which parameter. This is only possible in the two above arrangements.
 \end{hintbox}
@@ -380,7 +380,7 @@ Keyword arguments always go last, since otherwise, the interpreter could not una
 %
 \vspace{-10pt}
 \begin{columns}[t]
-\column{.5\linewidth}
+\column{.45\linewidth}
 \begin{itemize}
 \item \texttt{end} -- string, automatically printed \emph{after the last argument}. Default: \inPy{"\n"} (line break)
 \item \texttt{sep} -- string, automatically printed \emph{between two arguments}. Default: \inPy{" "} (whitespace)
@@ -682,7 +682,7 @@ var = lambda args : expression(args)
 \begin{codebox}[Equivalent Code]
 \begin{minted}[fontsize=\scriptsize]{python}
 def var (args) :
-    return expressio(args)
+    return expression(args)
 \end{minted}
 \end{codebox}
 %

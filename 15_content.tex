@@ -155,7 +155,7 @@ print(f"NumPy is {tPython/tNumpy:5.1f} times faster than native Python")
 %
 \vspace{-3pt}
 \begin{cmdbox}[Output: Speedup in Summation due to NumPy]
-\begin{minted}[linenos, fontsize=\scriptsize]{text}
+\begin{minted}[fontsize=\scriptsize]{text}
 taking the time for summation of 10000 values, Python-Style...done
 taking the time for summation of 10000 values, NumPy-Style...done
 
@@ -467,7 +467,6 @@ print(data)
 	\item \texttt{what} is a \inPy{tuple} mentioning all \texttt{np.ndarray}s to concatenate
 	\item All elements in \texttt{what} need to be of same dimension
 	\item \texttt{axis} can be none (creates a 1D list of all elements)
-	\item 
 	\end{itemize}
 \item Inserting data
 	\begin{itemize}
@@ -544,8 +543,8 @@ print(np.concatenate((a, b), axis=None))
 data = np.array([0, 1, 2, 3],
                 [4, 5, 6, 7])
 idx = (1, 3)
-print(np.insert(data, 
-                idx, 999, axis=1))
+print( np.insert(data, 
+                 idx, 999, axis=1) )
 print()
 
 data = np.array([[1, 1],
@@ -555,10 +554,11 @@ print( np.insert(data, 1, 5) )
 print()
 
 print( np.insert(data, 1, 5, axis=1) )
+print()
+
 print( np.insert(data,
                 [1], [[1],[2],[3]],
-                axis=1)
-     )
+                axis=1) )
 \end{minted}
 \end{codebox}
 %
@@ -625,6 +625,7 @@ print( np.insert(data,
 
 \begin{frame}{Linear Algebra}
 %
+\vspace{-6pt}
 \begin{tcolorbox}[title=Wikipedia]
 \scriptsize
 Linear algebra is the branch of mathematics concerning linear equations such as:
@@ -637,10 +638,24 @@ Linear algebra is the branch of mathematics concerning linear equations such as:
 \item NumPy has an own submodule dedicated to solving problems from linear algebra
 \item Linear: all variables at most to the first power
 \item Examples for \emph{nonlinear} terms
+	\vspace{-6pt}
+	\begin{columns}
+	\column{.45\linewidth}
+	\vspace{-6pt}
 	\begin{itemize}
 	\item $x^2 = 2$
 	\item $x \cdot y = 5$
 	\end{itemize}
+	%
+	\column{.45\linewidth}
+	\begin{itemize}
+	\item $\sin(x)$
+	\item $f(x) = \begin{cases}
+		0 & \text{if } x < 0 \\
+		1 & \text{if } x \geq 0
+	\end{cases}$
+	\end{itemize}
+	\end{columns}
 \end{itemize}
 %
 \end{frame}
@@ -650,7 +665,7 @@ Linear algebra is the branch of mathematics concerning linear equations such as:
 \begin{frame}[fragile]{Systems of Linear Equations}
 %
 \begin{itemize}
-\item Several linear Equations that need to be satisfied at the same time
+\item Several linear equations that need to be satisfied at the same time
 \item As many variables as equations
 \item Implicit question: which values for the variables solve the system of equations?
 \item Step 1: Transform in to \emph{coefficient matrix} and \emph{inhomogeneity vector}
