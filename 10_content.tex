@@ -50,7 +50,7 @@
 \item Representation in Binary and as Text
 \item Handles
 \item Reading and Writing Files
-\item Block struktures
+\item Block structures
 \item File Cursor Manipulation
 \item Pickle, JSON, CSV
 \end{itemize}
@@ -100,7 +100,7 @@
 \column{.5\linewidth}
 \begin{itemize}
 \item Python does most of the interpretation work in the background through assigned data types (\inPy{int}, \inPy{float}, \inPy{dict}, \ldots)
-\item File content only holds \enquote{raw information}, without an assigned data type
+\item File content only holds \enquote{raw information}, no data type assigned
 \item[\Thus] Our task
 \item Manipulate files via \emph{handles}
 \item Picture: \enquote{attach a handle to a file} with which you can \enquote{touch} the file
@@ -282,7 +282,7 @@ Some text Some text
 \begin{columns}[T]
 \column{.5\linewidth}
 \begin{itemize}
-\item Data Container, representing a section of memory
+\item Data container, representing a section of memory
 \item Can be generated from many objects
 \item Can be cast into many data types
 	\begin{itemize}
@@ -327,7 +327,7 @@ ABCD
 
 % =========================================================================== %
 
-\begin{frame}[fragile]{Reading From Files}
+\begin{frame}[fragile]{Reading from Files}
 %
 \begin{columns}[T]
 \column{.5\linewidth}
@@ -402,7 +402,7 @@ Some
 %
 \column{.5\linewidth}
 \vspace{-10pt}
-\begin{codebox}[Beispiel: \texttt{readline} and \texttt{readlines}]
+\begin{codebox}[Example: \texttt{readline} and \texttt{readlines}]
 \begin{minted}[fontsize=\scriptsize]{python}
 handle = open("output.txt", "r")
 print( handle.readline(), end="" )
@@ -430,7 +430,7 @@ Some text Some text
 
 % =========================================================================== %
 
-\begin{frame}[fragile]{Block structure: \inPy{with .. as}}
+\begin{frame}[fragile]{Block Structure: \inPy{with .. as}}
 %
 \begin{itemize}
 \item Close Files automatically
@@ -471,12 +471,12 @@ print(data)
 
 % =========================================================================== %
 
-\begin{frame}[fragile]{Block Strukture: File Handles with \inPy{for} and \inPy{list}}
+\begin{frame}[fragile]{Block Structure: File Handles with \inPy{for} and \inPy{list}}
 %
 \begin{columns}[t]
 \column{.5\linewidth}
 \begin{itemize}
-\item File Handles are \emph{Iterables}
+\item File handles are \emph{iterables}
 \item Can be looped over with \inPy{for}: read line by line
 \item Can be stored as a \inPy{list} 
 \item Hidden access to method \texttt{readlines}
@@ -495,7 +495,8 @@ with open("output.txt", "r") as handle :
         print(line)
 
 with open("output.txt", "r") as handle :
-    lines = list(handle) # stays in mem
+    lines = list(handle)
+    # object <lines> stays in memory
 for line in lines :
     print(line)
 \end{minted}
@@ -533,7 +534,7 @@ for line in lines :
 \end{itemize}
 %
 \column{.5\linewidth}
-\begin{codebox}[Beispiel: \texttt{seek} und \texttt{tell}]
+\begin{codebox}[Example: \texttt{seek} und \texttt{tell}]
 \begin{minted}[fontsize=\scriptsize, linenos]{python}
 with open("output.txt", "r") as handle :
     text = handle.read(4)
@@ -582,18 +583,18 @@ with open("output.txt", "r") as handle :
 import pickle
 
 class Foo :
-    def __init__(self) :
-        self.bar = 1 + 1j
-    def __str__(self) :
-        return "Foo object"
+    def __init__(self) : self.bar = 1 + 1j
+    def __str__(self)  : return "Foo object"
 
 complexNumber = -0.3 + 4.1j
 classObject   = Foo()
 
 with open("archive.pkl", "wb") as handle :
+    pickle.dump(Foo          , handle)
     pickle.dump(complexNumber, handle)
     pickle.dump(classObject  , handle)
 with open("archive.pkl", "rb") as handle :
+    Bar             = pickle.load(handle)
     readComplex     = pickle.load(handle)
     readClassObject = pickle.load(handle)
 

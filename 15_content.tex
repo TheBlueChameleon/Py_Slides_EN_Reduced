@@ -840,17 +840,16 @@ Depending on your code, good values for \texttt{epsilon} are between \inPy{1e-7}
 \begin{minted}[linenos, fontsize=\scriptsize]{python3}
 import numpy as np
 
-reprod = np.array(
-    [[0.7, 0.3, 0.0],
-     [0.0, 0.7, 0.3],
-     [0.0, 1.0, 0.0]])
+reprod = np.array([[0.7, 0.0, 0.0],
+                   [0.3, 0.7, 1.0],
+                   [0.0, 0.3, 0.0]])
 
 eVals, eVecs = np.linalg.eig(reprod)
 
 print("Eigenvalues:\n", eVals)
 print("Eigenvectors:\n", eVecs)
 
-pop = eVecs[:, 1]
+pop = -eVecs[:, 1]
 
 print("Composition of 1st gen:\n",
       pop)
@@ -862,15 +861,15 @@ print("Composition of 2nd gen:\n",
 \begin{cmdbox}[Output: Ants]
 \begin{minted}[fontsize=\scriptsize]{text}
 Eigenvalues:
-[ 0.7  1.  -0.3]
+ [-0.3  1.   0.7]
 Eigenvectors:
-[[ 1.          0.57735027  0.08588584]
- [ 0.          0.57735027 -0.28628613]
- [ 0.          0.57735027  0.9542871 ]]
-Composition of first  generation:
-[0.57735027 0.57735027 0.57735027]
-Composition of second generation:
-[0.57735027 0.57735027 0.57735027]
+ [[ 0.          0.          0.79555728]
+ [ 0.70710678 -0.95782629 -0.5568901 ]
+ [-0.70710678 -0.28734789 -0.23866719]]
+Composition of 1st gen:
+ [-0.          0.95782629  0.28734789]
+Composition of 2nd gen:
+ [0.         0.95782629 0.28734789]
 \end{minted}
 \end{cmdbox}
 \end{tcbraster}
